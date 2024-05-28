@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,15 +19,15 @@ public class StartManager : MonoBehaviour
     {
         StartCoroutine(StartEvent());
 
-        // ½ÃÀÛ¹öÆ°¿¡ ¹èÆ²¾À È£ÃâÇØÁÖ´Â ÇÔ¼ö ¿¬°á
+        // ì‹œìž‘ë²„íŠ¼ì— ë°°í‹€ì”¬ í˜¸ì¶œí•´ì£¼ëŠ” í•¨ìˆ˜ ì—°ê²°
         startBtn.onClick.AddListener(() => LoadingManager.LoadScene("1.BattleScene"));
     }
 
 
-    #region # StartEvent() : ½ÃÀÛ ÀÌº¥Æ® ±¸ÇöÇØÁÖ´Â ÇÔ¼ö
+    #region # StartEvent() : ì‹œìž‘ ì´ë²¤íŠ¸ êµ¬í˜„í•´ì£¼ëŠ” í•¨ìˆ˜
     IEnumerator StartEvent()
     {
-        // Å¸ÀÌÆ² ÅØ½ºÆ® ¶³¾îÁö´Â ¿¬Ãâ
+        // íƒ€ì´í‹€ í…ìŠ¤íŠ¸ ë–¨ì–´ì§€ëŠ” ì—°ì¶œ
         while (titleTxtParent.anchoredPosition.y > 0f)
         {
             titleTxtParent.anchoredPosition += new Vector2(0, -60f) * Time.deltaTime * 3f;
@@ -36,15 +36,15 @@ public class StartManager : MonoBehaviour
 
         yield return null;
 
-        //½ÃÀÛ ¹öÆ° È°¼ºÈ­
+        //ì‹œìž‘ ë²„íŠ¼ í™œì„±í™”
         startBtn.gameObject.SetActive(true);
 
-        // ½ÃÀÛ ¹öÆ° ¿¬ÃâÇÔ¼ö È£Ãâ
+        // ì‹œìž‘ ë²„íŠ¼ ì—°ì¶œí•¨ìˆ˜ í˜¸ì¶œ
         StartCoroutine(Btn_Production());
     }
     #endregion
 
-    #region # Btn_Production() : ½ÃÀÛ ¹öÆ° ¿¬ÃâÇØÁÖ´Â ÇÔ¼ö
+    #region # Btn_Production() : ì‹œìž‘ ë²„íŠ¼ ì—°ì¶œí•´ì£¼ëŠ” í•¨ìˆ˜
     private IEnumerator Btn_Production()
     {
         if (startBtnImg.color.a > 0f)
@@ -67,7 +67,7 @@ public class StartManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.1f);
 
-        // Àç±ÍÇÔ¼ö
+        // ìž¬ê·€í•¨ìˆ˜
         StartCoroutine(Btn_Production());
     }
     #endregion

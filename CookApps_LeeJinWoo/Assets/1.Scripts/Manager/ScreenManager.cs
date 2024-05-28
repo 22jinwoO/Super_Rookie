@@ -1,10 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ScreenManager : MonoBehaviour
 {
-    [Header("ÇØ»óµµ ´ëÀÀÇØ¾ß ÇÏ´Â Ä«¸Ş¶óµé")]
+    [Header("í•´ìƒë„ ëŒ€ì‘í•´ì•¼ í•˜ëŠ” ì¹´ë©”ë¼ë“¤")]
     [SerializeField]
     private Camera[] cameras = new Camera[2];
 
@@ -12,16 +12,16 @@ public class ScreenManager : MonoBehaviour
     {
         for (int i = 0; i < cameras.Length; i++)
         {
-            // ÇØ»óµµ ´ëÀÀÇØ¾ßÇÏ´Â Ä«¸Ş¶óÀÇ rect°ª
+            // í•´ìƒë„ ëŒ€ì‘í•´ì•¼í•˜ëŠ” ì¹´ë©”ë¼ì˜ rectê°’
             Rect rect = cameras[i].rect;
 
-            // ÇØ»óµµ °¡·Î ±æÀÌ - 16 (16:9)
+            // í•´ìƒë„ ê°€ë¡œ ê¸¸ì´ - 16 (16:9)
             float scaleHeight = ((float)Screen.width / Screen.height) / ((float)16 / 9);
 
-            // ÇØ»óµµ ¼¼·Î ±æÀÌ - 9
+            // í•´ìƒë„ ì„¸ë¡œ ê¸¸ì´ - 9
             float scaleWidth = 1f / scaleHeight;
 
-            //ÇØ»óµµ °¡·Î ±æÀÌ°¡ 1º¸´Ù ÀÛÀ» ¶§
+            //í•´ìƒë„ ê°€ë¡œ ê¸¸ì´ê°€ 1ë³´ë‹¤ ì‘ì„ ë•Œ
             if (scaleHeight < 1)
             {
                 rect.height = scaleHeight;
