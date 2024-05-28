@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,18 +10,18 @@ public class LoadingManager : MonoBehaviour
     public static string nextSceneName;
 
     [SerializeField]
-    private Transform loadingImgOb;    // ·Îµù ÀÌ¹ÌÁö °ÔÀÓ¿ÀºêÁ§Æ®
+    private Transform loadingImgOb;    // ë¡œë”© ì´ë¯¸ì§€ ê²Œì„ì˜¤ë¸Œì íŠ¸
 
     [SerializeField]
-    private TextMeshProUGUI loadingTxt;    // ·Îµù ÅØ½ºÆ®
+    private TextMeshProUGUI loadingTxt;    // ë¡œë”© í…ìŠ¤íŠ¸
 
     [SerializeField]
     int loadingCount = 0;
 
     [SerializeField]
-    private TextMeshProUGUI loadingGageTxt;    // ·Îµù ¼ıÀÚ º¸¿©ÁÖ´Â ÅØ½ºÆ®
+    private TextMeshProUGUI loadingGageTxt;    // ë¡œë”© ìˆ«ì ë³´ì—¬ì£¼ëŠ” í…ìŠ¤íŠ¸
 
-    // ´Ù¸¥ ¾À¿¡¼­ ºÎ¸¦ ¼ö ÀÖ´Â ÇÔ¼ö
+    // ë‹¤ë¥¸ ì”¬ì—ì„œ ë¶€ë¥¼ ìˆ˜ ìˆëŠ” í•¨ìˆ˜
     public static void LoadScene(string sceneName)
     {
         nextSceneName = sceneName;
@@ -39,19 +39,19 @@ public class LoadingManager : MonoBehaviour
         switch (loadingCnt)
         {
             case 0:
-                loadingTxt.text = "·ÎµùÁß";
+                loadingTxt.text = "ë¡œë”©ì¤‘";
                 loadingCount += 1;
                 break;
             case 1:
-                loadingTxt.text = "·ÎµùÁß.";
+                loadingTxt.text = "ë¡œë”©ì¤‘.";
                 loadingCount += 1;
                 break;
             case 2:
-                loadingTxt.text = "·ÎµùÁß..";
+                loadingTxt.text = "ë¡œë”©ì¤‘..";
                 loadingCount += 1;
                 break;
             case 3:
-                loadingTxt.text = "·ÎµùÁß...";
+                loadingTxt.text = "ë¡œë”©ì¤‘...";
                 loadingCount += 1;
                 break;
         }
@@ -63,44 +63,44 @@ public class LoadingManager : MonoBehaviour
         StartCoroutine("LoadingTxtCount", loadingCount);
     }
 
-    #region # LoadNextScene() : ·Îµù¾À ¿¬ÃâÇØÁÖ´Â ÇÔ¼ö
+    #region # LoadNextScene() : ë¡œë”©ì”¬ ì—°ì¶œí•´ì£¼ëŠ” í•¨ìˆ˜
     IEnumerator LoadNextScene()
     {
         print(nextSceneName);
 
-        // ´ÙÀ½ ¾ÀÀ¸·Î ÀüÈ¯À» °É¾î³õ°í ´Ù¸¥ ÀÏ ÇÒ ¼ö ÀÖ°Ô
+        // ë‹¤ìŒ ì”¬ìœ¼ë¡œ ì „í™˜ì„ ê±¸ì–´ë†“ê³  ë‹¤ë¥¸ ì¼ í•  ìˆ˜ ìˆê²Œ
         AsyncOperation op = SceneManager.LoadSceneAsync(nextSceneName);
 
-        // allowSceneActivation = ¾ÀÀÌ ÀüÈ¯µÉ °ÍÀ» Çã¿ëÇØ ÁÙ °ÍÀÎÁö, ·ÎµùÀÌ µÇ´õ¶óµµ ¾À ÀüÈ¯ ¸øÇÏ°Ô ±â´Ù¸®±â (op.progress 0.9 ±îÁö¸¸)
+        // allowSceneActivation = ì”¬ì´ ì „í™˜ë  ê²ƒì„ í—ˆìš©í•´ ì¤„ ê²ƒì¸ì§€, ë¡œë”©ì´ ë˜ë”ë¼ë„ ì”¬ ì „í™˜ ëª»í•˜ê²Œ ê¸°ë‹¤ë¦¬ê¸° (op.progress 0.9 ê¹Œì§€ë§Œ)
         op.allowSceneActivation = false;
 
         float time = 0;
         float gage = 0;
 
-        // ·ÎµùÀÌ ³¡³ª±â Àü±îÁö ¹İº¹
+        // ë¡œë”©ì´ ëë‚˜ê¸° ì „ê¹Œì§€ ë°˜ë³µ
         while (!op.isDone)
         {
 
             if (op.progress < 0.9f)
             {
-                //·Îµù °úÁ¤À» ÇÁ·Î±×·¹½º ¹Ù¿¡ Àû¿ë
+                //ë¡œë”© ê³¼ì •ì„ í”„ë¡œê·¸ë ˆìŠ¤ ë°”ì— ì ìš©
                 gage = op.progress;
                 int intGage = Mathf.FloorToInt(gage * 100f);
                 loadingGageTxt.text = intGage.ToString() + " %";
             }
 
 
-            else // ÆäÀÌÅ© ·Îµù (1ÃÊ)
+            else // í˜ì´í¬ ë¡œë”© (1ì´ˆ)
             {
 
                 time += Time.deltaTime * 0.3f;
                 gage = Mathf.Lerp(0.9f, 1, time);
                 int intGage = Mathf.FloorToInt(gage * 100f);
                 loadingGageTxt.text = intGage.ToString() + " %";
-                // ¾À ÀüÈ¯ Çã¿ë
+                // ì”¬ ì „í™˜ í—ˆìš©
                 if (gage >= 1)
                 {
-                    // ¾À ÀüÈ¯ Çã¿ë
+                    // ì”¬ ì „í™˜ í—ˆìš©
                     op.allowSceneActivation = true;
 
                 }
