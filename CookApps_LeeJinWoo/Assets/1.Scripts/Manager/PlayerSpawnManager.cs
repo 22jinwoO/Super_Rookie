@@ -11,13 +11,13 @@ public class PlayerSpawnManager : MonoBehaviour
 
     [Header("플레이어 유닛들")]
     [SerializeField]
-    private UnitData[] playerUnits;
+    private PlayerUnitData[] playerUnits;
 
     [Header("플레이어 현재 주기")]
     [SerializeField]
     private float[] current_Cycle;
 
-    [Header("플레이어 현재 주기")]
+    [Header("플레이어 현재 주기 보여주는 마스크 이미지")]
     [SerializeField]
     private Image[] unitsImgs;
 
@@ -29,6 +29,25 @@ public class PlayerSpawnManager : MonoBehaviour
     [SerializeField]
     private StageManager stageManagerCs;
 
+    [Header("플레이어 유닛 스폰 포인트들")]
+    [SerializeField]
+    private Transform[] spawnPoints;
+
+    private void Awake()
+    {
+        for(int i = 0; i < playerUnits.Length; i++)
+        {
+            playerUnits[i].CharacterId = CharacterNumber.Tanker + i;
+            playerUnits[i].CharacterType = CharacterType.Tanker + i;
+
+            playerUnits[i].BasePos = spawnPoints[i];
+
+            playerUnits[i].InitStats(playerUnits[i].CharacterId);
+
+            playerUnits[i].OnValue();
+
+        }
+    }
 
     private void Update()
     {
@@ -76,9 +95,11 @@ public class PlayerSpawnManager : MonoBehaviour
     {
         playerUnits[playerUnit_Num].InitValue();
 
-        playerUnits[playerUnit_Num].transform.position = playerUnits[playerUnit_Num].base_Pos.position;
+        playerUnits[playerUnit_Num].transform.position = playerUnits[playerUnit_Num].BasePos.position;
 
         playerUnits[playerUnit_Num].gameObject.SetActive(true);
+
+        playerUnits[playerUnit_Num].OnValue();
 
         current_Cycle[playerUnit_Num] = 0f;
 
