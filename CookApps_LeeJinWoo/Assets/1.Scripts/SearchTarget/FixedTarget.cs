@@ -4,34 +4,35 @@ using UnityEngine;
 
 public class FixedTarget : AbsSearchTarget, ISearchTarget
 {
-    public Transform _targetUnit { get; set; }
+    public bool IsSearch { get; set; }
+    public Transform TargetUnit { get; set; }
     public Transform _thistargetUnit;
 
-    public IUnitActState _actStateCs { get; set; }
-    public CapsuleCollider2D _targetColider { get; set; }
+    public IUnitActState ActState { get; set; }
+    public CapsuleCollider2D TargetColider { get; set; }
 
     private void Awake()
     {
-        unitDataCs = GetComponent<UnitData>();
+        unitDataCs = GetComponent<BaseUnitData>();
     }
 
     private void Update()
     {
-        _thistargetUnit = _targetUnit;
+        _thistargetUnit = TargetUnit;
     }
     public void SearchTarget()
     {
 
         {
             // 오버랩 스피어 생성
-            Collider2D[] _cols = Physics2D.OverlapCircleAll((Vector2)transform.position, unitDataCs._unit_sightRange, layerMask);
+            Collider2D[] _cols = Physics2D.OverlapCircleAll((Vector2)transform.position, unitDataCs.UnitSightRange, layerMask);
 
 
             // 탐지된 적이 없다면 함수 탈출
             if (_cols.Length <= 0)
             {
                 //unitInfoCs._nav.isStopped = true;
-                _actStateCs.Exit();
+                ActState.Exit();
                 return;
             }
 
@@ -68,24 +69,24 @@ public class FixedTarget : AbsSearchTarget, ISearchTarget
             _shortestTarget = _cols[0].transform;
 
             //시야범위 밖의 타겟인데 자꾸 타겟을 인식해서 예외처리 구문 추가
-            if (_shortestDistance > unitDataCs._unit_sightRange)
+            if (_shortestDistance > unitDataCs.UnitSightRange)
             {
-                unitDataCs._isSearch = false;
-                _thistargetUnit = _targetUnit;
-                _actStateCs.Exit();
+                IsSearch = false;
+                _thistargetUnit = TargetUnit;
+                ActState.Exit();
                 return;
             }
 
-            // 거리가 가장 가까운 적 타겟을 _targetUnit 변수에 할당
-            _targetUnit = _shortestTarget; 
+            // 거리가 가장 가까운 적 타겟을 TargetUnit 변수에 할당
+            TargetUnit = _shortestTarget; 
 
-            _targetColider = _targetUnit.GetComponent<CapsuleCollider2D>();
+            TargetColider = TargetUnit.GetComponent<CapsuleCollider2D>();
 
             // 타겟 할당
-            _thistargetUnit = _targetUnit;
+            _thistargetUnit = TargetUnit;
 
             // 현재 상태 탈출
-            _actStateCs.Exit();
+            ActState.Exit();
         }
     }
 }
