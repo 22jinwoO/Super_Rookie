@@ -5,7 +5,7 @@ using UnityEngine;
 public class MonsterIdle : MonoBehaviour, IUnitActState
 {
     [SerializeField]
-    private UnitData unitDataCs;
+    private MonsterUnitData unitData;
 
     [SerializeField]
     private IUnitController contorllerCs;
@@ -21,7 +21,7 @@ public class MonsterIdle : MonoBehaviour, IUnitActState
 
     private void Awake()
     {
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<MonsterUnitData>();
 
 
 
@@ -33,8 +33,8 @@ public class MonsterIdle : MonoBehaviour, IUnitActState
     // 대기 상태 돌입
     public void Enter()
     {
-        unitDataCs.default_Pos = (Vector2)transform.position;
-        searchTargetCs._actStateCs = this;
+        unitData.Default_Pos = (Vector2)transform.position;
+        searchTargetCs.ActState = this;
         anim.SetTrigger(hashIdle);
         searchTargetCs.SearchTarget();
     }
@@ -49,15 +49,15 @@ public class MonsterIdle : MonoBehaviour, IUnitActState
     public void Exit()
     {
 
-        contorllerCs._unitState = null;
+        contorllerCs.UnitState = null;
 
         // 타겟이 없다면 이동상태로 전환
-        if (searchTargetCs._targetUnit == null)
-            contorllerCs.actionState = UnitAction.Move;
+        if (searchTargetCs.TargetUnit == null)
+            contorllerCs.Action = UnitAction.Move;
 
         // 탐지된 타겟이 있다면 추적상태로 돌입
-        if (searchTargetCs._targetUnit != null)
-            contorllerCs.actionState = UnitAction.Tracking;
+        if (searchTargetCs.TargetUnit != null)
+            contorllerCs.Action = UnitAction.Tracking;
 
     }
 

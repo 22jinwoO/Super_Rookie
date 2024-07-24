@@ -5,14 +5,14 @@ using UnityEngine;
 public class MonsterReturnMove : MonoBehaviour, IUnitActState
 {
     [SerializeField]
-    private UnitData unitDataCs;
+    private MonsterUnitData unitData;
 
 
     [SerializeField]
-    private IUnitController contorllerCs;
+    private IUnitController contorller;
 
     [SerializeField]
-    private ISearchTarget searchTargetCs;
+    private ISearchTarget searchTarget;
 
     [SerializeField]
     private Animator anim;
@@ -30,17 +30,17 @@ public class MonsterReturnMove : MonoBehaviour, IUnitActState
 
     private void Awake()
     {
-        unitDataCs = GetComponent<UnitData>();
-        contorllerCs = GetComponent<IUnitController>();
-        searchTargetCs = GetComponent<ISearchTarget>();
+        unitData = GetComponent<MonsterUnitData>();
+        contorller = GetComponent<IUnitController>();
+        searchTarget = GetComponent<ISearchTarget>();
         anim = GetComponentInChildren<Animator>();
     }
     public void Enter()
     {
 
-        searchTargetCs._actStateCs = this;
+        searchTarget.ActState = this;
         delayTime = 0f;
-        arrivePoint = unitDataCs.default_Pos;
+        arrivePoint = unitData.Default_Pos;
     }
 
     public void DoAction()
@@ -69,9 +69,9 @@ public class MonsterReturnMove : MonoBehaviour, IUnitActState
             // 타겟을 향한 이동방향 구하기
             Vector2 dir = arrivePoint - (Vector2)transform.position;
 
-            Vector2 nextVec = dir.normalized * unitDataCs._unit_Speed * Time.deltaTime;
+            Vector2 nextVec = dir.normalized * unitData.UnitSpeed * Time.deltaTime;
 
-            contorllerCs._rigid.MovePosition(contorllerCs._rigid.position + nextVec);
+            contorller.Rigid.MovePosition(contorller.Rigid.position + nextVec);
 
             // 딜레이 시간 더해주기
             delayTime += Time.deltaTime;
@@ -88,7 +88,7 @@ public class MonsterReturnMove : MonoBehaviour, IUnitActState
 
             anim.SetBool(hashWalk, false);
             arrivalTime += Time.deltaTime;
-            contorllerCs._rigid.MovePosition(transform.position);
+            contorller.Rigid.MovePosition(transform.position);
             if (arrivalTime > 3f)
                 Exit();
         }
@@ -105,9 +105,9 @@ public class MonsterReturnMove : MonoBehaviour, IUnitActState
         //dir.Normalize();
 
         //// 리지드바디로 이동방향으로 이동
-        //contorllerCs._rigid.velocity = dir * Time.deltaTime * 250f;
+        //contorller.Rigid.velocity = dir * Time.deltaTime * 250f;
 
-        searchTargetCs.SearchTarget();
+        searchTarget.SearchTarget();
     }
 
     public void Exit()
@@ -115,25 +115,25 @@ public class MonsterReturnMove : MonoBehaviour, IUnitActState
         float distance = Vector2.Distance((Vector2)transform.position, arrivePoint);
 
 
-        if (searchTargetCs._targetUnit != null)
+        if (searchTarget.TargetUnit != null)
         {
-            contorllerCs._unitState = null;
-            contorllerCs.actionState = UnitAction.Tracking;
+            contorller.UnitState = null;
+            contorller.Action = UnitAction.Tracking;
             delayTime = 0f;
             arrivalTime = 0f;
         }
 
         if (arrivalTime > 3f && distance <= 0.3f)
         {
-            contorllerCs._unitState = null;
-            contorllerCs.actionState = UnitAction.Idle;
+            contorller.UnitState = null;
+            contorller.Action = UnitAction.Idle;
             arrivalTime = 0f;
         }
 
         if (delayTime > 13f)
         {
-            contorllerCs._unitState = null;
-            contorllerCs.actionState = UnitAction.Idle;
+            contorller.UnitState = null;
+            contorller.Action = UnitAction.Idle;
             delayTime = 0f;
         }
 
