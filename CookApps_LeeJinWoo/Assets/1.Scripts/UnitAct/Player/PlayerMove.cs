@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour, IUnitActState
 {
     [SerializeField]
-    private UnitData unitDataCs;
+    private BaseUnitData unitData;
 
 
     [SerializeField]
@@ -22,27 +22,27 @@ public class PlayerMove : MonoBehaviour, IUnitActState
 
     private void Awake()
     {
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<BaseUnitData>();
         contorllerCs = GetComponent<IUnitController>();
         searchTargetCs = GetComponent<ISearchTarget>();
         anim = GetComponentInChildren<Animator>();
     }
     public void Enter()
     {
-        contorllerCs._rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-        searchTargetCs._actStateCs = this;
+        contorllerCs.Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        searchTargetCs.ActState = this;
     }
 
     public void DoAction()
     {
         // 목표지점의 x값이 나의 x 값보다 클 경우 오브젝트 방향 전환
-        if (unitDataCs.base_Pos.position.x > transform.position.x)
+        if (unitData.BasePos.position.x > transform.position.x)
             transform.localScale = new Vector3(-1f, 1f, 1f);
         else
             transform.localScale = Vector3.one;
 
         // 베이스캠프까지의 거리 구하기
-        float distance = Vector2.Distance(unitDataCs.base_Pos.position, transform.position);
+        float distance = Vector2.Distance(unitData.BasePos.position, transform.position);
 
         //베이스캠프까지의 거리가 0.3보다 클 경우 행동 탈출
         if (distance <= 0.3f)
@@ -50,11 +50,11 @@ public class PlayerMove : MonoBehaviour, IUnitActState
 
         anim.SetBool(hashWalk, true);
         // 타겟을 향한 이동방향 구하기
-        Vector2 dir = (Vector2)unitDataCs.base_Pos.position - (Vector2)transform.position;
+        Vector2 dir = (Vector2)unitData.BasePos.position - (Vector2)transform.position;
 
-        Vector2 nextVec = dir.normalized * unitDataCs._unit_Speed * Time.deltaTime;
+        Vector2 nextVec = dir.normalized * unitData.UnitSpeed * Time.deltaTime;
 
-        contorllerCs._rigid.MovePosition(contorllerCs._rigid.position + nextVec);
+        contorllerCs.Rigid.MovePosition(contorllerCs.Rigid.position + nextVec);
 
         // 타겟 탐지함수 호출
         searchTargetCs.SearchTarget();
@@ -62,15 +62,15 @@ public class PlayerMove : MonoBehaviour, IUnitActState
 
     public void Exit()
     {
-        float distance = Vector2.Distance(unitDataCs.base_Pos.position, transform.position);
+        float distance = Vector2.Distance(unitData.BasePos.position, transform.position);
 
 
         // 타겟이 탐지됐을 경우 추적상태로 전환
-        if (searchTargetCs._targetUnit != null)
+        if (searchTargetCs.TargetUnit != null)
         {
             anim.SetBool(hashWalk, false);
-            contorllerCs._unitState = null;
-            contorllerCs.actionState = UnitAction.Tracking;
+            contorllerCs.UnitState = null;
+            contorllerCs.Action = UnitAction.Tracking;
 
         }
 
@@ -78,8 +78,8 @@ public class PlayerMove : MonoBehaviour, IUnitActState
         else if (distance <= 0.3f)
         {
             anim.SetBool(hashWalk, false);
-            contorllerCs._unitState = null;
-            contorllerCs.actionState = UnitAction.Idle;
+            contorllerCs.UnitState = null;
+            contorllerCs.Action = UnitAction.Idle;
 
         }
 
