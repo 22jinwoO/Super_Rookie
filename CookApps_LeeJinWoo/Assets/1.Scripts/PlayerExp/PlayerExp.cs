@@ -21,7 +21,7 @@ public class PlayerExp : MonoBehaviour
     private GameObject levelUp_Vfx;
 
     [Header("유닛 데이터 스크립트")]
-    public UnitData unitDataCs;
+    public PlayerUnitData unitData;
 
     [Header("경험치 바 이미지")]
     [SerializeField]
@@ -38,29 +38,27 @@ public class PlayerExp : MonoBehaviour
         levelUp_Vfx = Instantiate(levelUp_Vfx);
         levelUp_Vfx.SetActive(false);
         levelUp_Vfx.transform.SetParent(transform);
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<PlayerUnitData>();
+        unitData.Unit_Level = level;
+
         max_ExpValue = 60f;
     }
 
-    #region # GetExpValue() : 몬스터 죽을 때, 호출되는 함수
-    public void GetExpValue(float expValue)
+    #region # CalculateExpValue() : 몬스터 처치 시 경험치를 부여해주고 레벨업을
+    public float CalculateExpValue
     {
-        // 현재 경험치량에 expValue 값만큼 증가
-        cur_ExpValue += expValue;
+        set
+        {
+            // 현재 경험치량에 value 값만큼 증가
+            cur_ExpValue += value;
 
-        // 경험치 바에 현재 경험치 량 반영
-        ExpBarImg.fillAmount = cur_ExpValue / max_ExpValue;
+            // 경험치 바에 현재 경험치 량 반영
+            ExpBarImg.fillAmount = cur_ExpValue / max_ExpValue;
 
-        // 레벨업 가능한지 체크하는 함수 호출
-        Check_LevelUp();
-    }
-    #endregion
-
-    #region # Check_LevelUp() : 레벨업 가능한지 체크하는 함수
-    private void Check_LevelUp()
-    {
-        if (cur_ExpValue >= max_ExpValue)
-            LevelUp();
+            // 레벨업 가능한지 체크
+            if (cur_ExpValue >= max_ExpValue) LevelUp();
+        }
+        
     }
     #endregion
 
@@ -68,8 +66,7 @@ public class PlayerExp : MonoBehaviour
     private void LevelUp()
     {
         //게임 오브젝트가 활성화 되어 있을 때만 코루틴 실행
-        if(gameObject.activeSelf)
-            StartCoroutine(Show_Vfx());
+        if(gameObject.activeSelf) StartCoroutine(Show_Vfx());
 
         // 현재경험치 = 현재경험치 - 최대 경험치량
         cur_ExpValue -= max_ExpValue;
@@ -81,7 +78,7 @@ public class PlayerExp : MonoBehaviour
         level++;
 
         // 유닛 데이터에 레벨 반영
-        unitDataCs._unit_Level = level;
+        unitData.Unit_Level = level;
 
         // UI Exp바에 경험치 반영
         ExpBarImg.fillAmount = cur_ExpValue / max_ExpValue;
@@ -112,19 +109,19 @@ public class PlayerExp : MonoBehaviour
     private void LevelUp_PlusValue()
     {
         // 레벨업 추가 공격력 1 증가
-        unitDataCs._level_Plus_AtkStat += 1f;
+        unitData.Level_Plus_AtkStat += 1f;
 
         // 유닛의 현재 공격력 = 유닛 기본 공격력 + 레벨업 추가 공격력 + 스탯창 추가 공격력
-        unitDataCs._unit_AtkDmg = unitDataCs.default_AtkDmg + unitDataCs._level_Plus_AtkStat + unitDataCs._plus_AtkStat;
+        unitData.AtkDmg = unitData.DefaultAtkDmg + unitData.Level_Plus_AtkStat + unitData.Plus_AtkStat;
 
         // 레벨업 추가 체력 40 증가
-        unitDataCs._level_Plus_HpStat += 40f;
+        unitData.Level_Plus_HpStat += 40f;
 
         // 최대 체력 = 기본 체력 + 레벨업 추가 체력
-        unitDataCs._max_Hp = unitDataCs.default_HpValue + unitDataCs._level_Plus_HpStat + unitDataCs._plus_HpStat;
+        unitData.Max_Hp = unitData.Max_Hp + unitData.Level_Plus_HpStat + unitData.Plus_HpStat;
 
         // 현재 체력에 최대 체력 반영
-        unitDataCs._unit_Hp = unitDataCs._max_Hp;
+        unitData.Unit_Hp = unitData.Max_Hp;
 
 
     }

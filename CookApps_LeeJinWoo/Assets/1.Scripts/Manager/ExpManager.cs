@@ -6,7 +6,7 @@ public class ExpManager : Singleton<ExpManager>
 {
     [Header("플레이어 캐릭터들")]
     [SerializeField]
-    private UnitData[] p_unitDatas;
+    private PlayerUnitData[] p_unitDatas;
 
     [Header("플레이어 캐릭터들 경험치 스크립트들")]
     [SerializeField]
@@ -21,12 +21,12 @@ public class ExpManager : Singleton<ExpManager>
             if(p_unitDatas[i].gameObject.activeSelf)
             {
                 // 자신을 처치한 유닛과 캐릭터 타입이 같을 경우 expValue 원본 값 추가경험치 획득
-                if (p_unitDatas[i].characterType.Equals(characterType))
-                    p_unit_Exps[i].GetExpValue(expValue);
+                if (p_unitDatas[i].CharacterType.Equals(characterType))
+                    p_unit_Exps[i].CalculateExpValue = expValue;
 
                 // 자신을 처치한 유닛과 다른 플레이어 유닛일 경우 경험치 획득량 1/2
                 else
-                    p_unit_Exps[i].GetExpValue(expValue * 0.5f);
+                    p_unit_Exps[i].CalculateExpValue = (expValue * 0.5f);
             }
         }
     }
