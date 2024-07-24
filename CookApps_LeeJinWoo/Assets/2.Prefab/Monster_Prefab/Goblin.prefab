@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1638164451075846084}
   - component: {fileID: 1788540524836582799}
   - component: {fileID: 1788540524836582798}
-  - component: {fileID: 1788540524836582795}
+  - component: {fileID: 2421076997566954913}
   - component: {fileID: 1788540524836582794}
   - component: {fileID: 1788540524836582797}
   - component: {fileID: 1788540524836582796}
@@ -80,7 +80,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.03}
   m_Size: {x: 0.38, y: 0.71}
   m_Direction: 0
---- !u!114 &1788540524836582795
+--- !u!114 &2421076997566954913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,42 +89,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1788540524836582801}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 713fb4b8be4513f4d8cf1143644b3eaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 067a25404ce55664dacfdcf5c79e8fe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  default_HpValue: 100
-  default_AtkDmg: 10
-  default_AtkRange: 1
-  default_AtkCoolTime: 1
-  default_SkillRange: 0
-  default_SkillCoolTime: 0
-  default__sightRange: 5
-  characterType: 5
-  _unit_Level: 0
-  _max_Hp: 0
-  _unit_Hp: 0
-  _unit_Speed: 2
-  _unit_AtkDmg: 0
-  _unit_AtkRange: 0
-  unit_AtkCoolTime: 0
-  unit_SkillRange: 0
-  unit_SkillCoolTime: 0
-  _unit_sightRange: 0
-  _current_AtkCoolTime: 0
-  _current_SkillCoolTime: 0
-  _dropGoldValue: 20
-  _deathExpValue: 15
-  _level_Plus_AtkStat: 0
-  _level_Plus_HpStat: 0
-  _plus_AtkStat: 0
-  _plus_HpStat: 0
-  _isSearch: 0
-  _canAct: 0
-  _canAtk: 0
-  _useSkill: 0
-  base_Pos: {fileID: 0}
-  default_Pos: {x: 0, y: 0}
-  rigid: {fileID: 0}
+  <CharacterId>k__BackingField: 5
+  <CharacterType>k__BackingField: 5
+  <Max_Hp>k__BackingField: 0
+  <Unit_Hp>k__BackingField: 0
+  <UnitSpeed>k__BackingField: 0
+  <AtkDmg>k__BackingField: 0
+  <AtkRange>k__BackingField: 0
+  <UnitAtkCoolTime>k__BackingField: 0
+  <UnitSkillRange>k__BackingField: 0
+  <UnitSkillCoolTime>k__BackingField: 0
+  <UnitSightRange>k__BackingField: 0
+  <Current_AtkCoolTime>k__BackingField: 0
+  <Current_SkillCoolTime>k__BackingField: 0
+  <CanAct>k__BackingField: 0
+  <CanAtk>k__BackingField: 0
+  <UseSkill>k__BackingField: 0
+  <BasePos>k__BackingField: {fileID: 0}
+  <DropGoldValue>k__BackingField: 20
+  <DeathExpValue>k__BackingField: 5
 --- !u!114 &1788540524836582794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitData: {fileID: 0}
-  actionState2: 0
+  <Action>k__BackingField: 0
   anim: {fileID: 0}
 --- !u!114 &1788540524836582797
 MonoBehaviour:
@@ -169,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c509f6415c1169445a0d6418e7032290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDataCs: {fileID: 0}
+  unitData: {fileID: 0}
   bodySprs: []
   anim: {fileID: 5490848694377117106}
   myColider: {fileID: 0}
@@ -187,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c3e798351d96314bb0d5e30e476fa3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDataCs: {fileID: 0}
+  unitData: {fileID: 0}
   anim: {fileID: 0}
 --- !u!114 &7996114993170587398
 MonoBehaviour:
@@ -201,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d345b31d3a7403c4db9f08be37c7065e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDataCs: {fileID: 0}
+  unitData: {fileID: 0}
   anim: {fileID: 0}
   arrivePoint: {x: 0, y: 0}
   delayTime: 0
@@ -218,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71f5abc0e7f9faf408644e14eb0c46aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDataCs: {fileID: 0}
+  unitData: {fileID: 0}
   anim: {fileID: 0}
   arrivePoint: {x: 0, y: 0}
   delayTime: 0
@@ -235,8 +221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e18d2dd29bfbe48a036bdf826d042f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDataCs: {fileID: 0}
-  targetDamagedCs: {fileID: 0}
+  unitData: {fileID: 0}
+  targetDamaged: {fileID: 0}
   anim: {fileID: 0}
   delayTime: 0
 --- !u!114 &-3287340304785352562
@@ -251,7 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edfb9ecd11dc9f42bb23c7c3c5ed2b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDataCs: {fileID: 0}
+  unitData: {fileID: 0}
   anim: {fileID: 0}
 --- !u!1 &3503191143618623399
 GameObject:
@@ -371,5 +357,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1dcfa8ec3501d04986597c0d20d4b7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitDataCs: {fileID: 0}
+  unitData: {fileID: 0}
   atkVfx: {fileID: 100002, guid: 9c2756d3218f35c46acf7ec84b49b834, type: 3}
