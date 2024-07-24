@@ -7,7 +7,7 @@ public class UnitDamaged : MonoBehaviour
 {
     [Header("유닛 데이터 스크립트")]
     [SerializeField]
-    private UnitData unitDataCs;
+    private BaseUnitData unitData;
 
     [Header("유닛의 컨트롤러")]
     [SerializeField]
@@ -26,7 +26,7 @@ public class UnitDamaged : MonoBehaviour
 
     [Header("나를 공격한 유닛")]
     [SerializeField]
-    public UnitData _unit_attacked_Me;
+    public BaseUnitData _unit_attacked_Me;
 
     [Header("체력바")]
     [SerializeField]
@@ -47,7 +47,7 @@ public class UnitDamaged : MonoBehaviour
     {
         // 컴포넌트 및 기본값 세팅해주는 함수 호출
         InitComponent();
-        isPlayerUnit = unitDataCs.characterType.Equals(CharacterType.Tanker) || unitDataCs.characterType.Equals(CharacterType.Meleer) || unitDataCs.characterType.Equals(CharacterType.Ranged_Dealer) || unitDataCs.characterType.Equals(CharacterType.Healer);
+        isPlayerUnit = unitData.CharacterType.Equals(CharacterType.Tanker) || unitData.CharacterType.Equals(CharacterType.Meleer) || unitData.CharacterType.Equals(CharacterType.Ranged_Dealer) || unitData.CharacterType.Equals(CharacterType.Healer);
     }
 
     private void Update()
@@ -58,7 +58,7 @@ public class UnitDamaged : MonoBehaviour
             hpBar.transform.localScale = transform.localScale;
 
             // 체력바에 유닛 hp 반영
-            hpBar.fillAmount = unitDataCs._unit_Hp / unitDataCs._max_Hp;
+            hpBar.fillAmount = unitData.Unit_Hp / unitData.Max_Hp;
 
             // Green Color
             if (hpBar.fillAmount > 0.7f)
@@ -80,7 +80,7 @@ public class UnitDamaged : MonoBehaviour
             hpBar.transform.localScale = transform.localScale;
 
             // 체력바에 유닛 hp 반영
-            hpBar.fillAmount = unitDataCs._unit_Hp / unitDataCs._max_Hp;
+            hpBar.fillAmount = unitData.Unit_Hp / unitData.Max_Hp;
         }
     }
 
@@ -97,7 +97,7 @@ public class UnitDamaged : MonoBehaviour
         myColider = GetComponent<CapsuleCollider2D>();
 
         // 유닛 데이터 가져오기
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<BaseUnitData>();
         
         // 바디 스프라이트 렌더러 가져오기
         bodySprs = GetComponentsInChildren<SpriteRenderer>();
@@ -109,7 +109,7 @@ public class UnitDamaged : MonoBehaviour
     public void GetDamaged(float AtkDmg)
     {
         // 공격한 유닛의 공격력만큼 Hp 감소
-        unitDataCs._unit_Hp -= AtkDmg;
+        unitData.Unit_Hp -= AtkDmg;
 
         // 유닛의 사망 유무 판단하는 함수 호출
         DeadCheck();
@@ -148,7 +148,7 @@ public class UnitDamaged : MonoBehaviour
     private IEnumerator DeadBody()
     {
         // 사망했을 경우 현재 위치에 움직임 멈춤
-        controllerCs._rigid.MovePosition(transform.position);
+        controllerCs.Rigid.MovePosition(transform.position);
 
         // 콜라이더 비활성화
         myColider.enabled = false;
@@ -157,10 +157,10 @@ public class UnitDamaged : MonoBehaviour
         anim.SetTrigger(hashDead);
 
         // 유닛이 몬스터일 경우
-        if (unitDataCs.characterType.Equals(CharacterType.Monster))
+        if (unitData.CharacterType.Equals(CharacterType.Monster))
         {
             // 보스 생성되기 전 호출되는 이벤트 해제
-            StageManager.Instance.OnDeadAllPlayer -= unitDataCs.UnitDead;
+            StageManager.Instance.OnDeadAllPlayer -= unitData.UnitDead;
 
             // 몬스터를 공격한 플레이어 유닛이 있을 경우
             // => 보스 스테이지 시작 전 이벤트가 호출되었을 때, 플레이어 유닛이 처치한 몬스터가 아니여도, 스테이지 몬스터 처치 수가 증가되는 것을 방지하기 위함
@@ -169,16 +169,23 @@ public class UnitDamaged : MonoBehaviour
                 // 스테이지의 몬스터 처치 수 증가
                 StageManager.Instance.deathMonsterCnt++;
 
-                // 처치한 몬스터의 골드량 플레이어에게 전달
-                StageManager.Instance.GetPlayerGold(unitDataCs._dropGoldValue);
+
+                MonsterUnitData monsterData = unitData as MonsterUnitData;
+
+                // 처치한 보스 몬스터의 골드량 플레이어에게 전달
+                StageManager.Instance.GetPlayerGold(monsterData.DropGoldValue);
+
 
                 // ExpManager에 몬스터를 처치한 유닛, 몬스터 처치시 부여되는 경험치 량 전달
-                ExpManager.Instance.Check_Exp(characterType: _unit_attacked_Me.characterType, expValue: unitDataCs._deathExpValue);
+                ExpManager.Instance.Check_Exp(characterType: _unit_attacked_Me.CharacterType, expValue: monsterData.DeathExpValue);
+
+                // 오브젝트 풀링 스택으로 푸쉬
+                monsterData.Factory.Monsters.Push(monsterData);
             }
         }
 
         // 유닛이 보스 몬스터 일 경우
-        if (unitDataCs.characterType.Equals(CharacterType.BossMonster))
+        if (unitData.CharacterType.Equals(CharacterType.BossMonster))
         {
             print("보스 몬스터 실행");
             // 몬스터를 공격한 플레이어 유닛이 있을 경우
@@ -186,10 +193,12 @@ public class UnitDamaged : MonoBehaviour
             if (_unit_attacked_Me != null)
             {
                 // 보스 생성되기 전 호출되는 이벤트 해제
-                StageManager.Instance.OnDeadAllPlayer -= unitDataCs.UnitDead;
+                StageManager.Instance.OnDeadAllPlayer -= unitData.UnitDead;
+
+                MonsterUnitData monsterData = unitData as MonsterUnitData;
 
                 // 처치한 보스 몬스터의 골드량 플레이어에게 전달
-                StageManager.Instance.GetPlayerGold(unitDataCs._dropGoldValue);
+                StageManager.Instance.GetPlayerGold(monsterData.DropGoldValue);
 
 
                 // 보스 사망 알리는 함수 호출
@@ -197,7 +206,7 @@ public class UnitDamaged : MonoBehaviour
                 
 
                 // ExpManager에 몬스터를 처치한 유닛, 몬스터 처치시 부여되는 경험치 량 전달
-                ExpManager.Instance.Check_Exp(characterType: _unit_attacked_Me.characterType, expValue: unitDataCs._deathExpValue);
+                ExpManager.Instance.Check_Exp(characterType: _unit_attacked_Me.CharacterType, expValue: monsterData.DeathExpValue);
             }
         }
 
@@ -229,13 +238,6 @@ public class UnitDamaged : MonoBehaviour
 
         // 오브젝트 비활성화
         gameObject.SetActive(false);
-
-        // 죽은 유닛이 몬스터이고 팩토리가 지정되어 있을 경우
-        bool isMonster = unitDataCs._factory != null;
-
-        // 오브젝트 풀링 스택으로 푸쉬
-        if (isMonster)
-            unitDataCs._factory._monsters.Push(unitDataCs);
     }
     #endregion
 
@@ -243,7 +245,7 @@ public class UnitDamaged : MonoBehaviour
     public void DeadCheck()
     {
         // 유닛의 hp가 0과 같거나 작을 경우
-        if (unitDataCs._unit_Hp <= 0f)
+        if (unitData.Unit_Hp <= 0f)
         {
             // 오브젝트가 활성화되어 있는 상태일 때만 비동기 함수(죽음 연출 함수) 호출
             if(gameObject.activeSelf)
