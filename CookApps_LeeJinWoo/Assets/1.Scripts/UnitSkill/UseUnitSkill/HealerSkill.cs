@@ -10,7 +10,7 @@ public class HealerSkill : MonoBehaviour, IUseSkill
 
     [Header("스킬 사용하는 유닛 스크립트")]
     [SerializeField]
-    private UnitData unitDataCs;
+    private PlayerUnitData unitData;
 
     [Header("스킬 이펙트 프리팹")]
     [SerializeField]
@@ -53,12 +53,12 @@ public class HealerSkill : MonoBehaviour, IUseSkill
     public void UseSkill()
     {
         // 오버랩 스피어 생성
-        Collider2D[] _cols = Physics2D.OverlapCircleAll((Vector2)transform.position, unitDataCs._unit_sightRange, layerMask);
+        Collider2D[] _cols = Physics2D.OverlapCircleAll((Vector2)transform.position, unitData.UnitSightRange, layerMask);
 
         // 탐지된 적이 없다면 함수 탈출
         if (_cols.Length <= 0)
         {
-            unitDataCs._current_SkillCoolTime = unitDataCs.unit_SkillCoolTime;
+            unitData.Current_SkillCoolTime = unitData.UnitSkillCoolTime;
             return;
         }
 
@@ -73,20 +73,22 @@ public class HealerSkill : MonoBehaviour, IUseSkill
 
         targetTr = _cols[0].transform;
 
-        bool cant_Heal = _cols[0].GetComponent<UnitData>()._unit_Hp >= _cols[0].GetComponent<UnitData>()._max_Hp;
+        bool cant_Heal = _cols[0].GetComponent<PlayerUnitData>().Unit_Hp >= _cols[0].GetComponent<PlayerUnitData>().Max_Hp;
 
         // 힐 불가능할 경우 스킬 쿨타임 초기화 하고 함수 탈출 -> 쿨타임 다시 반환할 시 애니메이션 무한으로 실행되기 때문
         if (cant_Heal)
         {
-            unitDataCs._current_SkillCoolTime = 0f;
+            unitData.Current_SkillCoolTime = 0f;
             return;
         }
 
+        PlayerUnitData healTarget = _cols[0].GetComponent<PlayerUnitData>();
+
         // 최대 Hp 량 넘지 않게 힐량 구하기
-        float healValue = Mathf.Clamp(_cols[0].GetComponent<UnitData>()._unit_Hp += unitDataCs._unit_AtkDmg * atkDMG_Rate, _cols[0].GetComponent<UnitData>()._unit_Hp, _cols[0].GetComponent<UnitData>()._max_Hp);
+        float healValue = Mathf.Clamp(healTarget.Unit_Hp += unitData.AtkDmg * atkDMG_Rate, healTarget.Max_Hp, healTarget.Max_Hp);
 
         // 타겟에게 힐량 전달
-        _cols[0].GetComponent<UnitData>()._unit_Hp = healValue;
+        healTarget.Unit_Hp = healValue;
 
         // 복사한 이펙트 오브젝트 활성화
         _skillVFx.SetActive(true);
@@ -110,12 +112,12 @@ public class HealerSkill : MonoBehaviour, IUseSkill
     #region # Partition() 함수 : 배열값 정렬해주는 함수
     private int Partition(Collider2D[] arr, int low, int high)
     {
-        float pivot = arr[high].GetComponent<UnitData>()._unit_Hp;
+        float pivot = arr[high].GetComponent<PlayerUnitData>().Unit_Hp;
         int i = low - 1;
 
         for (int j = low; j < high; j++)
         {
-            if (arr[j].GetComponent<UnitData>()._unit_Hp <= pivot)
+            if (arr[j].GetComponent<PlayerUnitData>().Unit_Hp <= pivot)
             {
                 i++;
                 Swap(arr, i, j);
@@ -140,10 +142,10 @@ public class HealerSkill : MonoBehaviour, IUseSkill
     private void InitComponent()
     {
         // 스킬을 가지고 있는 유닛의 데이터
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<PlayerUnitData>();
 
         // 스킬을 가지고 있는 유닛의 타겟 탐지 스크립트
-        //searchTargetCs = GetComponent<ISearchTarget>();
+        //searchTarget = GetComponent<ISearchTarget>();
 
     }
     #endregion

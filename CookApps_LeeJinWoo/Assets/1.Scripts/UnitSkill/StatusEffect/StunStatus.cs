@@ -5,7 +5,7 @@ using UnityEngine;
 public class StunStatus : MonoBehaviour, IStatusEffect
 {
     [Header("타겟 유닛 데이터")]
-    public UnitData _targetUnitData;
+    public BaseUnitData targetUnitData;
 
     [SerializeField]
     private float duringTime;    
@@ -30,15 +30,8 @@ public class StunStatus : MonoBehaviour, IStatusEffect
 
         // 현재 스턴 적용중인 시간
         duringTime = 0f;
-        //unitData = GetComponent<UnitData>();
-        //unitData.isStun = this;
-        //Debug.Log(unitData.isStun);
-        //unitData._canAct = false;
 
-
-
-
-        _targetUnitData = GetComponent<UnitData>();
+        targetUnitData = GetComponent<BaseUnitData>();
     }
 
     private void Update()
@@ -50,15 +43,15 @@ public class StunStatus : MonoBehaviour, IStatusEffect
     public void OnStatusEffect(float StatusEffecttime)
     {
         // 상태이상 효과가 적용된 상태에서 재적용될 경우 컴포넌트 파괴
-        if (_targetUnitData.isStun == null)
+        if (targetUnitData.IsStun == null)
         {
             Destroy(this);
         }
 
         // 상태이상 효과가 적용중일 경우
-        else if (_targetUnitData.isStun != null && duringTime <= StatusEffecttime)
+        else if (targetUnitData.IsStun != null && duringTime <= StatusEffecttime)
         {
-            _targetUnitData._canAct = false;
+            targetUnitData.CanAct = false;
             duringTime += Time.deltaTime;
         }
 
@@ -66,28 +59,28 @@ public class StunStatus : MonoBehaviour, IStatusEffect
         else
         {
             // 스턴 상태효과 해제
-            _targetUnitData.isStun = null;
+            targetUnitData.IsStun = null;
 
             // 행동 제어 해제
-            _targetUnitData._canAct = true;
+            targetUnitData.CanAct = true;
         }
 
         anim.SetTrigger(hashIdle);
         anim.SetBool(hashAttack, false);
         anim.SetBool(hashUseSkill, false);
 
-        controllerCs._unitState = null;
-        controllerCs.actionState = UnitAction.Idle;
+        controllerCs.UnitState = null;
+        controllerCs.Action = UnitAction.Idle;
     }
 
     private void OnDestroy()
     {
         // 상태이상 효과가 적용된 상태에서 재적용될 경우 
-        if (_targetUnitData.isStun != null)
+        if (targetUnitData.IsStun != null)
         {
             // 행동 제어 안풀리도록 설정
-            _targetUnitData._canAct = false;
-            _targetUnitData.isStun = null;
+            targetUnitData.CanAct = false;
+            targetUnitData.IsStun = null;
         }
     }
 }

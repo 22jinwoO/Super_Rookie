@@ -10,19 +10,19 @@ public class TankerSkill : MonoBehaviour, IUseSkill
 
     [Header("상태이상 적용 시간")]
     [SerializeField]
-    private UnitData unitDataCs;
+    private BaseUnitData unitData;
 
     [Header("유닛의 적 탐지 스크립트")]
     [SerializeField]
-    private ISearchTarget searchTargetCs;
+    private ISearchTarget searchTarget;
 
     [Header("타겟의 유닛 데이터")]
     [SerializeField]
-    private UnitData targetData;
+    private BaseUnitData targetData;
 
     [Header("타겟의 데미지 스크립트")]
     [SerializeField]
-    private UnitDamaged targetDamagedCs;
+    private UnitDamaged targetDamaged;
 
     [Header("스킬 이펙트 프리팹")]
     [SerializeField]
@@ -51,44 +51,44 @@ public class TankerSkill : MonoBehaviour, IUseSkill
     public void UseSkill()
     {
         // 이펙트 위치 조정
-        _skillVFx.transform.position = searchTargetCs._targetUnit.position;
+        _skillVFx.transform.position = searchTarget.TargetUnit.position;
 
         // 복사한 이펙트 오브젝트 활성화
         _skillVFx.SetActive(true);
 
         // 타겟의 Data 가져오기
-        targetData = searchTargetCs._targetUnit.GetComponent<UnitData>();
+        targetData = searchTarget.TargetUnit.GetComponent<BaseUnitData>();
 
         // 타겟의 데미지 스크립트 가져오기
-        targetDamagedCs = searchTargetCs._targetUnit.GetComponent<UnitDamaged>();
+        targetDamaged = searchTarget.TargetUnit.GetComponent<UnitDamaged>();
 
-        targetDamagedCs._unit_attacked_Me = this.unitDataCs;
+        //targetDamaged._unit_attacked_Me = this.unitData;
 
 
         // 기존에 스턴이 적용됐을 경우의 예외 처리
-        if (targetData.isStun != null)
+        if (targetData.IsStun != null)
         {            
             // 기존 상태효과 해제
-            Destroy(searchTargetCs._targetUnit.GetComponent<StunStatus>());
+            Destroy(searchTarget.TargetUnit.GetComponent<StunStatus>());
         }
 
         // 새로운 상태효과(스턴) 부여
-        if (targetData.isStun == null)
+        if (targetData.IsStun == null)
         {
             // 타겟에게 스턴 상태효과 스크립트 추가
-            targetData.isStun = searchTargetCs._targetUnit.gameObject.AddComponent<StunStatus>();
+            targetData.IsStun = searchTarget.TargetUnit.gameObject.AddComponent<StunStatus>();
 
             // 스턴 상태효과 스크립트의 유닛 데이터에 타겟 데이터 할당
-            targetData.GetComponent<StunStatus>()._targetUnitData = targetData;
+            targetData.GetComponent<StunStatus>().targetUnitData = targetData;
 
             // 스턴 상태효과의 이펙트 할당
-            targetData.isStun._skillVfx = _skillVFx;
+            targetData.IsStun._skillVfx = _skillVFx;
 
             // 스턴 효과 지속시간 부여
-            targetData.isStun._statusEffecttime = applyTime;
+            targetData.IsStun._statusEffecttime = applyTime;
 
             // 타겟에게 피해를 부여
-            targetDamagedCs.GetDamaged(AtkDmg: unitDataCs._unit_AtkDmg);
+            targetDamaged.GetDamaged(AtkDmg: unitData.AtkDmg);
         }
     }
     #endregion
@@ -97,10 +97,10 @@ public class TankerSkill : MonoBehaviour, IUseSkill
     private void InitComponent()
     {
         // 스킬을 가지고 있는 유닛의 데이터
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<BaseUnitData>();
 
         // 스킬을 가지고 있는 유닛의 타겟 탐지 스크립트
-        searchTargetCs = GetComponent<ISearchTarget>();
+        searchTarget = GetComponent<ISearchTarget>();
         
         //상태이상 지속시간 할당
         applyTime = 1f;

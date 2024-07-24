@@ -10,7 +10,7 @@ public class MeleerSkill : MonoBehaviour, IUseSkill
 
     [Header("스킬 사용하는 유닛 스크립트")]
     [SerializeField]
-    private UnitData unitDataCs;
+    private BaseUnitData unitData;
 
     [Header("유닛의 적 탐지 스크립트")]
     [SerializeField]
@@ -18,7 +18,7 @@ public class MeleerSkill : MonoBehaviour, IUseSkill
 
     [Header("타겟의 유닛 데이터")]
     [SerializeField]
-    private UnitData targetData;
+    private BaseUnitData targetData;
 
     [Header("타겟의 데미지 스크립트")]
     [SerializeField]
@@ -54,12 +54,12 @@ public class MeleerSkill : MonoBehaviour, IUseSkill
     public void UseSkill()
     {
         // 오버랩 스피어 생성
-        Collider2D[] _cols = Physics2D.OverlapCircleAll((Vector2)transform.position, unitDataCs._unit_sightRange, layerMask);
+        Collider2D[] _cols = Physics2D.OverlapCircleAll((Vector2)transform.position, unitData.UnitSightRange, layerMask);
 
         // 탐지된 적이 없다면 함수 탈출
         if (_cols.Length <= 0)
         {
-            unitDataCs._current_SkillCoolTime = unitDataCs.unit_SkillCoolTime;
+            unitData.Current_SkillCoolTime = unitData.UnitSkillCoolTime;
             return;
         }
 
@@ -69,9 +69,9 @@ public class MeleerSkill : MonoBehaviour, IUseSkill
         for (int i = 0; i < _cols.Length; i++)
         {
             UnitDamaged targetUnitDamaged = _cols[i].GetComponent<UnitDamaged>();
-            targetUnitDamaged.GetDamaged(AtkDmg: unitDataCs._unit_AtkDmg * atkDMG_Rate);
+            targetUnitDamaged.GetDamaged(AtkDmg: unitData.AtkDmg * atkDMG_Rate);
             // 타겟에게 공격한 유닛 할당
-            targetUnitDamaged._unit_attacked_Me = this.unitDataCs;
+            //targetUnitDamaged._unit_attacked_Me = this.unitData;
         }
 
         // 복사한 이펙트 오브젝트 활성화
@@ -84,7 +84,7 @@ public class MeleerSkill : MonoBehaviour, IUseSkill
     private void InitComponent()
     {
         // 스킬을 가지고 있는 유닛의 데이터
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<BaseUnitData>();
 
         // 스킬을 가지고 있는 유닛의 타겟 탐지 스크립트
         searchTargetCs = GetComponent<ISearchTarget>();

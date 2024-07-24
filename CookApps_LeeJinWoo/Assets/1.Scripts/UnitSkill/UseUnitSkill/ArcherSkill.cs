@@ -10,19 +10,19 @@ public class ArcherSkill : MonoBehaviour, IUseSkill
 
     [Header("스킬 사용하는 유닛 스크립트")]
     [SerializeField]
-    private UnitData unitDataCs;
+    private BaseUnitData unitData;
 
     [Header("유닛의 적 탐지 스크립트")]
     [SerializeField]
-    private ISearchTarget searchTargetCs;
+    private ISearchTarget searchTarget;
 
     [Header("타겟의 유닛 데이터")]
     [SerializeField]
-    private UnitData targetData;
+    private BaseUnitData targetData;
 
     [Header("타겟의 데미지 스크립트")]
     [SerializeField]
-    private UnitDamaged targetDamagedCs;
+    private UnitDamaged targetDamaged;
 
     [Header("스킬 이펙트 프리팹")]
     [SerializeField]
@@ -51,22 +51,22 @@ public class ArcherSkill : MonoBehaviour, IUseSkill
     public void UseSkill()
     {
         // 이펙트 위치 조정
-        _skillVFx.transform.position = searchTargetCs._targetUnit.position;
+        _skillVFx.transform.position = searchTarget.TargetUnit.position;
 
         // 복사한 이펙트 오브젝트 활성화
         _skillVFx.SetActive(true);
 
         // 타겟의 Data 가져오기
-        targetData = searchTargetCs._targetUnit.GetComponent<UnitData>();
+        targetData = searchTarget.TargetUnit.GetComponent<BaseUnitData>();
 
         // 타겟의 데미지 스크립트 가져오기
-        targetDamagedCs = searchTargetCs._targetUnit.GetComponent<UnitDamaged>();
+        targetDamaged = searchTarget.TargetUnit.GetComponent<UnitDamaged>();
 
         // 타겟에게 공격한 유닛 할당
-        targetDamagedCs._unit_attacked_Me = this.unitDataCs;
+        targetDamaged._unit_attacked_Me = this.unitData;
 
         // 타겟에게 피해를 부여
-        targetDamagedCs.GetDamaged(AtkDmg: unitDataCs._unit_AtkDmg * atkDMG_Rate);
+        targetDamaged.GetDamaged(AtkDmg: unitData.AtkDmg * atkDMG_Rate);
 
     }
     #endregion
@@ -75,10 +75,10 @@ public class ArcherSkill : MonoBehaviour, IUseSkill
     private void InitComponent()
     {
         // 스킬을 가지고 있는 유닛의 데이터
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<BaseUnitData>();
 
         // 스킬을 가지고 있는 유닛의 타겟 탐지 스크립트
-        searchTargetCs = GetComponent<ISearchTarget>();
+        searchTarget = GetComponent<ISearchTarget>();
 
     }
     #endregion
