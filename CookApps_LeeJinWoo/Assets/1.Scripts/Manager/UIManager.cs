@@ -79,7 +79,7 @@ public class UIManager : MonoBehaviour
 
     [Header("해당 슬롯의 플레이어 유닛들")]
     [SerializeField]
-    private UnitData[] click_slotUnits;
+    private PlayerUnitData[] click_slotUnits;
 
     [Header("유닛 슬롯 버튼들")]
     [SerializeField]
@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviour
 
     [Header("클릭한 슬롯의 플레이어 유닛")]
     [SerializeField]
-    private UnitData click_slotUnit;
+    private PlayerUnitData click_slotUnit;
 
     [Header("클릭한 슬롯의 플레이어 유닛의 경험치 텍스트")]
     [SerializeField]
@@ -106,7 +106,10 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI[] totalValueTxts;
 
     [Header("기본 능력치 텍스트들")]
-    public TextMeshProUGUI[] defaultValueTxts;
+    public TextMeshProUGUI[] defaultValueTxts;    
+    
+    [Header("레벨 플러스 능력치 텍스트들")]
+    public TextMeshProUGUI[] levelPlusValueTxts;
 
     [Header("스탯창 추가 능력치 텍스트들")]
     public TextMeshProUGUI[] plusStatsTxts;
@@ -205,33 +208,22 @@ public class UIManager : MonoBehaviour
         if(unitStatBorad_Obj.activeSelf)
         {
             // Ui에서 - 값 보이지 않게 변경
-            if (click_slotUnit._unit_Hp <= 0)
-                click_slotUnit._unit_Hp = 0;
+            if (click_slotUnit.Unit_Hp <= 0)
+                click_slotUnit.Unit_Hp = 0;
 
             // 클릭한 유닛의 hp 반영
-            unitDataBoard_Hp_Txt.text = $"{click_slotUnit._unit_Hp} / {click_slotUnit._max_Hp} ";
+            unitDataBoard_Hp_Txt.text = $"{Mathf.FloorToInt(click_slotUnit.Unit_Hp)}/ {click_slotUnit.Max_Hp} ";
 
             // hp 바에 클릭한 유닛의 hp 반영
-            hpBarImg.fillAmount = click_slotUnit._unit_Hp / click_slotUnit._max_Hp;
+            hpBarImg.fillAmount = click_slotUnit.Unit_Hp / click_slotUnit.Max_Hp;
 
             // 클릭한 유닛의 Exp반영
-            unitDataBoard_Exp_Txt.text = $"{click_slotUnit_Exp.cur_ExpValue} / {click_slotUnit_Exp.max_ExpValue}";
+            unitDataBoard_Exp_Txt.text = $"{Mathf.FloorToInt(click_slotUnit_Exp.cur_ExpValue)} / {click_slotUnit_Exp.max_ExpValue}";
 
             // Exp 바에 클릭한 유닛의 Exp 반영
             expBarImg.fillAmount = click_slotUnit_Exp.cur_ExpValue / click_slotUnit_Exp.max_ExpValue;
 
-            // 레벨 반영
-            levelTxt.text = $"Lv {click_slotUnit._unit_Level}";
-
-            // 클릭한 유닛의 Hp 보여주기
-            totalValueTxts[0].text = $"{click_slotUnit._max_Hp}";
-            defaultValueTxts[0].text = $"{click_slotUnit.default_HpValue + click_slotUnit._level_Plus_HpStat}";
-            plusStatsTxts[0].text = $"{click_slotUnit._plus_HpStat}";
-
-            // 클릭한 유닛의 ATk_Dmg 보여주기
-            totalValueTxts[1].text = $"{click_slotUnit._unit_AtkDmg}";
-            defaultValueTxts[1].text = $"{click_slotUnit.default_AtkDmg + click_slotUnit._level_Plus_AtkStat}";
-            plusStatsTxts[1].text = $"{click_slotUnit._plus_AtkStat}";
+            ShowText();
 
         }
 
@@ -241,6 +233,23 @@ public class UIManager : MonoBehaviour
 
     }
 
+    private void ShowText()
+    {
+        // 레벨 반영
+        levelTxt.text = $"Lv {click_slotUnit.Unit_Level}";
+
+        // 클릭한 유닛의 Hp 보여주기
+        totalValueTxts[0].text = $"{click_slotUnit.Max_Hp}";
+        defaultValueTxts[0].text = $"{click_slotUnit.Max_Hp - click_slotUnit.Level_Plus_HpStat - click_slotUnit.Plus_HpStat}";
+        levelPlusValueTxts[0].text = $"{click_slotUnit.Level_Plus_HpStat}";
+        plusStatsTxts[0].text = $"{click_slotUnit.Plus_HpStat}";
+
+        // 클릭한 유닛의 ATk_Dmg 보여주기
+        totalValueTxts[1].text = $"{click_slotUnit.AtkDmg}";
+        defaultValueTxts[1].text = $"{click_slotUnit.DefaultAtkDmg}";
+        levelPlusValueTxts[1].text = $"{click_slotUnit.Level_Plus_AtkStat}";
+        plusStatsTxts[1].text = $"{click_slotUnit.Plus_AtkStat}";
+    }
     #region # FadeInFadeOut() : 화면 페이드인 페이드 아웃 해주는 함수
     public IEnumerator FadeInFadeOut(bool FadeInOutCheck)  // 화면 페이드인 페이드 아웃 해주는 함수
     {
@@ -486,7 +495,7 @@ public class UIManager : MonoBehaviour
             statsManagerCs._thisUnit = click_slotUnit;
 
             // 스탯매니저의 함수 호출
-            statsManagerCs.GetStats(playerUnit: click_slotUnit, stat: PlusStas.Hp, plusValue: 40f, toTalValueText: totalValueTxts[0], defaultValueText: defaultValueTxts[0], plusValueText: plusStatsTxts[0]);
+            statsManagerCs.GetStats(playerUnit: click_slotUnit, stat: PlusStats.Hp, plusValue: 40f, toTalValueText: totalValueTxts[0], defaultValueText: defaultValueTxts[0], plusValueText: plusStatsTxts[0]);
         }
 
     }
@@ -510,7 +519,7 @@ public class UIManager : MonoBehaviour
             statsManagerCs._thisUnit = click_slotUnit;
 
             // 스탯매니저의 함수 호출
-            statsManagerCs.GetStats(playerUnit: click_slotUnit, stat: PlusStas.Attack, plusValue: 1f, toTalValueText: totalValueTxts[1], defaultValueText: defaultValueTxts[1], plusValueText: plusStatsTxts[1]);
+            statsManagerCs.GetStats(playerUnit: click_slotUnit, stat: PlusStats.Attack, plusValue: 1f, toTalValueText: totalValueTxts[1], defaultValueText: defaultValueTxts[1], plusValueText: plusStatsTxts[1]);
         }
         
     }
@@ -529,7 +538,7 @@ public class UIManager : MonoBehaviour
     #endregion
 
     #region # Link_SlotUnit : 유닛 팝업창 활성화 후, 클릭한 슬롯의 유닛 데이터 보여주는 함수
-    private void Link_SlotUnit(UnitData playerUnit)
+    private void Link_SlotUnit(PlayerUnitData playerUnit)
     {
         unitStatBorad_Obj.SetActive(true);
 
@@ -544,17 +553,10 @@ public class UIManager : MonoBehaviour
         click_slotUnit_Exp = click_slotUnit.GetComponent<PlayerExp>();
 
         // 캐릭터 타입 확인
-        CharacterType characterType = playerUnit.characterType;
+        CharacterType characterType = playerUnit.CharacterType;
 
-        // 클릭한 유닛의 Hp 보여주기
-        totalValueTxts[0].text = $"{click_slotUnit._max_Hp}";
-        defaultValueTxts[0].text = $"{click_slotUnit.default_HpValue + click_slotUnit._level_Plus_HpStat}";
-        plusStatsTxts[0].text = $"{click_slotUnit._plus_HpStat}";
 
-        // 클릭한 유닛의 ATk_Dmg 보여주기
-        totalValueTxts[1].text = $"{click_slotUnit._unit_AtkDmg}";
-        defaultValueTxts[1].text = $"{click_slotUnit.default_AtkDmg + click_slotUnit._level_Plus_AtkStat}";
-        plusStatsTxts[1].text = $"{click_slotUnit._plus_AtkStat}";
+        ShowText();
 
 
         // 캐릭터 이미지 활성화
