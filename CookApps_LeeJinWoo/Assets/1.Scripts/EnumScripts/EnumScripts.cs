@@ -1,5 +1,5 @@
-
-// À¯´Ö µ¿ÀÛ
+ï»¿
+// ìœ ë‹› ë™ì‘
 public enum UnitAction
 {
     Default = 0,
@@ -13,7 +13,7 @@ public enum UnitAction
     End = Dead +1
 }
 
-// À¯´Ö Å¸ÀÔ
+// ìœ ë‹› íƒ€ì…
 public enum CharacterType
 {
     Default = 0,
@@ -26,8 +26,24 @@ public enum CharacterType
     End = BossMonster + 1
 }
 
-// Áõ°¡½ÃÅ³ À¯´ÖÀÇ µ¥ÀÌÅÍ Ç×¸ñ ±¸ºĞ
-public enum PlusStas
+// ìœ ë‹› íƒ€ì…
+public enum CharacterNumber
+{
+    Default = 0,
+    Tanker = 0,
+    Meleer = 1,
+    Ranged_Dealer = 2,
+    Healer = 3,
+    Goblin = 4,
+    Mushoroom = 5,
+    FlyEye = 6,
+    Boss_1 = 7,
+    End = Boss_1 + 1
+}
+
+
+// ì¦ê°€ì‹œí‚¬ ìœ ë‹›ì˜ ë°ì´í„° í•­ëª© êµ¬ë¶„
+public enum PlusStats
 {
     Default = 0,
     Attack = 1,
