@@ -10,7 +10,7 @@ public class BossManager : MonoBehaviour
 
     [Header("보스 유닛 종류")]
     [SerializeField]
-    private UnitData[] bossUnits;
+    private MonsterUnitData[] bossUnits;
 
     [Header("보스 생성 이펙트")]
     [SerializeField]
@@ -32,8 +32,11 @@ public class BossManager : MonoBehaviour
         {
             bossUnits[i] = Instantiate(bossUnits[i]);
             bossUnits[i].gameObject.SetActive(false);
+            bossUnits[i].CharacterId = CharacterNumber.Boss_1;
+            bossUnits[i].CharacterType = CharacterType.BossMonster;
             bossUnits[i].transform.SetParent(transform);
         }
+
     }
     public void SpawnBoss()
     {
@@ -44,7 +47,7 @@ public class BossManager : MonoBehaviour
         int randMonsterKind = Random.Range(0, bossUnits.Length);
 
         // 지정된 몬스터 팩토리의 몬스터 반환
-        UnitData spawnMonster = bossUnits[randMonsterKind];
+        MonsterUnitData spawnMonster = bossUnits[randMonsterKind];
 
         // 랜덤한 위치에서 생성될 수 있도록 스폰포인트 갯수 중 랜덤 숫자 추출
         int randSpawnPoint = Random.Range(0, spawnPoints.Length);
@@ -92,11 +95,13 @@ public class BossManager : MonoBehaviour
         // 스폰되는 몬스터 위치 랜덤한 위치로 조정
         spawnMonster.transform.position = spawnPoint;
 
+        spawnMonster.InitValue(value: stageMgrCs.cur_Stage);
+
         //몬스터 스폰 연출 함수 호출
-        StartCoroutine(monsterSpawnProduction(monster: spawnMonster, spawnPoint: spawnPoint));
+        StartCoroutine(monsterSpawnProduction(monster: spawnMonster, spawnPoint : spawnPoint));
     }
 
-    private IEnumerator monsterSpawnProduction(UnitData monster, Vector2 spawnPoint)
+    private IEnumerator monsterSpawnProduction(MonsterUnitData monster, Vector2 spawnPoint)
     {
         // 보스 몬스터 오브젝트 활성화
         monster.gameObject.SetActive(true);
@@ -126,7 +131,7 @@ public class BossManager : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
 
         // 유닛 생성 시 초기값 할당하는 함수 호출 , 스테이지 단계 N 당 몬스터 공격력, 체력 N * 40%씩 강화
-        monster.InitValue(value: stageMgrCs.cur_Stage);
+        monster.OnValue();
     }
 
 }
