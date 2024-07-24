@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_UnitController : MonoBehaviour, IUnitController
+public class MonsterController : MonoBehaviour, IUnitController
 {
     [Header("유닛 데이터 스크립트")]
     [SerializeField]
-    private UnitData unitData;
+    private MonsterUnitData unitData;
 
-    public UnitAction actionState { get; set; }
-    public IUnitActState _unitState { get; set; }
-    public Rigidbody2D _rigid { get; set; }
+    [field : SerializeField]
+    public UnitAction Action { get; set; }
+    [field: SerializeField]
+    public IUnitActState UnitState { get; set; }
 
-    public ISearchTarget searchTargetCs;
+    public Rigidbody2D Rigid { get; set; }
 
-    public UnitAction actionState2;
+    public ISearchTarget searchTarget;
 
     [Header("유닛 애니메이터")]
     [SerializeField]
@@ -26,122 +27,120 @@ public class M_UnitController : MonoBehaviour, IUnitController
 
     [Header("몬스터 대기 상태 스크립트")]
     [SerializeField]
-    private IUnitActState monsterIdleCs;
+    private IUnitActState monsterIdle;
 
     [Header("몬스터 움직임 스크립트")]
     [SerializeField]
-    private IUnitActState monsterMoveCs;
+    private IUnitActState monsterMove;
 
     [Header("몬스터 패트롤 스크립트")]
     [SerializeField]
-    private IUnitActState monsterReturnMoveCs;
+    private IUnitActState monsterReturnMove;
 
     [Header("타겟 추적 스크립트")]
     [SerializeField]
-    private IUnitActState unitTrackingCs;
+    private IUnitActState unitTracking;
 
     [Header("유닛 공격 스크립트")]
     [SerializeField]
-    private IUnitActState unitAtkCs;
+    private IUnitActState unitAtk;
 
     private void Awake()
     {
-        unitData = GetComponent<UnitData>();
-        searchTargetCs = GetComponent<ISearchTarget>();
-        _rigid = GetComponent<Rigidbody2D>();
+        unitData = GetComponent<MonsterUnitData>();
+        searchTarget = GetComponent<ISearchTarget>();
+        Rigid = GetComponent<Rigidbody2D>();
 
-        monsterIdleCs = GetComponent<MonsterIdle>();
-        monsterMoveCs = GetComponent<MonsterMove>();
-        monsterReturnMoveCs = GetComponent<MonsterReturnMove>();
-        unitTrackingCs = GetComponent<UnitTracking>();
-        unitAtkCs = GetComponent<UnitAtk>();
+        monsterIdle = GetComponent<MonsterIdle>();
+        monsterMove = GetComponent<MonsterMove>();
+        monsterReturnMove = GetComponent<MonsterReturnMove>();
+        unitTracking = GetComponent<UnitTracking>();
+        unitAtk = GetComponent<UnitAtk>();
 
 
         anim = GetComponentInChildren<Animator>();
-        actionState = UnitAction.Idle;
+        Action = UnitAction.Idle;
     }
 
     // Update is called once per frame
     void Update()
     {
-        _rigid.velocity = Vector2.zero;
+        Rigid.velocity = Vector2.zero;
+
         // 타겟이 죽었는지 체크하는 함수 호출
         Check_TargetDead();
 
-        actionState2 = actionState;
-
         // 유닛이 행동 가능할 때만 동작하는 함수 호출
-        if (unitData._canAct)
-            setActionType(actionState);
+        if (unitData.CanAct) SetState(Action);
     }
 
     #region # setActionType(UnitAction state)
-    public void setActionType(UnitAction state)
+    public void SetState(UnitAction state)
     {
 
         // 현재 상태 저장
-        actionState = state;
+        Action = state;
 
         // 다양한 상태 중에 어떤 것을 가져와야 할 지 모르므로
         // 인터페이스를 대표로 해서 가져온다.
 
         // 자유 모드 상태 중 유닛 행동 상태에 따른 FSM
-        switch (actionState)
+        switch (Action)
         {
             // 유닛 대기 상태
             case UnitAction.Idle:
 
-                if (_unitState == null)
+                if (UnitState == null)
                 {
-                    _unitState = monsterIdleCs;
-                    _unitState.Enter();
+                    UnitState = monsterIdle;
+                    UnitState.Enter();
                 }
                 break;
 
              // 몬스터 이동
             case UnitAction.Move:
 
-                if (_unitState == null && _unitState != monsterMoveCs)
+                if (UnitState == null && UnitState != monsterMove)
                 {
-                    _unitState = monsterMoveCs;
-                    _unitState.Enter();
+                    UnitState = monsterMove;
+                    UnitState.Enter();
                 }
-                _unitState.DoAction();
+                UnitState.DoAction();
                 break;
 
             // 베이스 지점으로 돌아옴
             case UnitAction.ReturnMove:
 
-                if (_unitState == null)
+                if (UnitState == null)
                 {
-                    _unitState = monsterReturnMoveCs;
-                    _unitState.Enter();
+                    UnitState = monsterReturnMove;
+                    UnitState.Enter();
                 }
 
-                _unitState.DoAction();
+                UnitState.DoAction();
                 break;
 
             // 유닛 추적 상태
             case UnitAction.Tracking:
-                if (_unitState == null)
+                if (UnitState == null)
                 {
-                    _unitState = unitTrackingCs;
-                    _unitState.Enter();
+                    UnitState = unitTracking;
+                    UnitState.Enter();
                 }
 
-                _unitState.DoAction();
+                UnitState.DoAction();
                 break;
 
             // 유닛 공격 상태
             case UnitAction.Attack:
-                if (_unitState == null)
+                if (UnitState == null)
                 {
-                    _unitState = unitAtkCs;
+                    UnitState = unitAtk;
 
-                    _unitState.Enter();
+                    UnitState.Enter();
                 }
 
-                _unitState.DoAction();
+                UnitState.DoAction();
                 break;
         }
     }
@@ -150,17 +149,17 @@ public class M_UnitController : MonoBehaviour, IUnitController
     #region # Check_TargetDead()
     private void Check_TargetDead()
     {
-        if (searchTargetCs._targetUnit != null && searchTargetCs._targetColider.enabled == false)
+        if (searchTarget.TargetUnit != null && searchTarget.TargetColider.enabled == false)
         {
-            searchTargetCs._targetUnit = null;
+            searchTarget.TargetUnit = null;
 
             //Component c = (Component)GetComponent<IUnitActState>();
 
             //Destroy(c);
             anim.SetBool(hashAttack, false);
             anim.SetBool(hashUseSkill, false);
-            actionState = UnitAction.Idle;
-            _unitState = null;
+            Action = UnitAction.Idle;
+            UnitState = null;
         }
     }
     #endregion
