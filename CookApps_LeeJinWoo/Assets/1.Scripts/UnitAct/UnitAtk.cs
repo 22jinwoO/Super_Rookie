@@ -6,16 +6,16 @@ public class UnitAtk : MonoBehaviour, IUnitActState
 {
 
     [SerializeField]
-    private UnitData unitDataCs;    
+    private BaseUnitData unitData;    
     
     [SerializeField]
-    private IUnitController contorllerCs;
+    private IUnitController contorller;
 
     [SerializeField]
-    private ISearchTarget searchTargetCs;
+    private ISearchTarget searchTarget;
 
     [SerializeField]
-    private UnitDamaged targetDamagedCs;
+    private UnitDamaged targetDamaged;
 
     [SerializeField]
     private Animator anim;
@@ -28,29 +28,27 @@ public class UnitAtk : MonoBehaviour, IUnitActState
 
     private void Awake()
     {
-        unitDataCs = GetComponent<UnitData>();
-        contorllerCs = GetComponent<IUnitController>();
-        searchTargetCs = GetComponent<ISearchTarget>();
+        unitData = GetComponent<BaseUnitData>();
+        contorller = GetComponent<IUnitController>();
+        searchTarget = GetComponent<ISearchTarget>();
 
         anim = GetComponentInChildren<Animator>();
     }
     public void Enter()
     {
         delayTime = 0f;
-        targetDamagedCs = searchTargetCs._targetUnit.GetComponent<UnitDamaged>();
-        //searchTargetCs._actStateCs = this;
+        targetDamaged = searchTarget.TargetUnit.GetComponent<UnitDamaged>();
     }
 
     public void DoAction()
     {
-        contorllerCs._rigid.constraints = RigidbodyConstraints2D.FreezeAll;
+        contorller.Rigid.constraints = RigidbodyConstraints2D.FreezeAll;
 
         // 기본 공격이 가능할 경우, 기본공격 애니메이션 실행
-        if (unitDataCs._canAtk)
-            anim.SetBool(hashAttack, true);
+        if (unitData.CanAtk) anim.SetBool(hashAttack, true);
 
         // 기본 공격이 불가능한 상태
-        else if (!unitDataCs._canAtk)
+        else if (!unitData.CanAtk)
         {
             // 기본 공격 애니메이션 취소
             anim.SetBool(hashAttack, false);
@@ -62,20 +60,19 @@ public class UnitAtk : MonoBehaviour, IUnitActState
             }
 
             // 행동 탈출
-            else
-                Exit();
+            else Exit();
         }
 
     }
 
     public void Exit()
     {
-        contorllerCs._rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        contorller.Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         // 추적상태로 전환
-        contorllerCs._unitState = null;
+        contorller.UnitState = null;
 
-        contorllerCs.actionState = UnitAction.Tracking;
+        contorller.Action = UnitAction.Tracking;
     }
 
 }
