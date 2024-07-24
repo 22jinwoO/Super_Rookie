@@ -5,7 +5,7 @@ using UnityEngine;
 public class UnitUseSkill : MonoBehaviour, IUnitActState
 {
     [SerializeField]
-    private UnitData unitDataCs;
+    private BaseUnitData unitData;
 
     [SerializeField]
     private IUnitController contorllerCs;
@@ -29,7 +29,7 @@ public class UnitUseSkill : MonoBehaviour, IUnitActState
     private void Awake()
     {
         skillCs = GetComponent<IUseSkill>();
-        unitDataCs = GetComponent<UnitData>();
+        unitData = GetComponent<BaseUnitData>();
         searchTargetCs = GetComponent<ISearchTarget>();
         contorllerCs = GetComponent<IUnitController>();
         anim = GetComponentInChildren<Animator>();
@@ -44,14 +44,13 @@ public class UnitUseSkill : MonoBehaviour, IUnitActState
 
     public void DoAction()
     {
-        contorllerCs._rigid.constraints = RigidbodyConstraints2D.FreezeAll;
+        contorllerCs.Rigid.constraints = RigidbodyConstraints2D.FreezeAll;
 
         // 유닛이 스킬 사용 가능 상태이면, 스킬 사용 애니메이션 실행
-        if (unitDataCs._useSkill)
-            anim.SetBool(hashUseSkill, true);
+        if (unitData.UseSkill) anim.SetBool(hashUseSkill, true);
 
         // 유닛이 스킬 사용이 불가한 경우
-        else if (!unitDataCs._useSkill)
+        else if (!unitData.UseSkill)
         {
             anim.SetBool(hashUseSkill, false);
 
@@ -71,8 +70,8 @@ public class UnitUseSkill : MonoBehaviour, IUnitActState
     // 상태 전환 시 추적 상태로 변경
     public void Exit()
     {
-        contorllerCs._rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-        contorllerCs._unitState = null;
-        contorllerCs.actionState = UnitAction.Tracking;
+        contorllerCs.Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        contorllerCs.UnitState = null;
+        contorllerCs.Action = UnitAction.Tracking;
     }
 }
