@@ -20,7 +20,7 @@ public class MonsterSpawnManager : MonoBehaviour
     private int maxMonster_SpawnCnt;
 
     [Header("몬스터 팩토리들")]
-    [SerializeField]
+    [field : SerializeField]
     private IMonsterFactory[] monsterFactories;
 
 
@@ -139,7 +139,7 @@ public class MonsterSpawnManager : MonoBehaviour
             int randMonsterKind = Random.Range(0, monsterFactories.Length);
 
             // 지정된 몬스터 팩토리의 몬스터 반환
-            UnitData spawnMonster = monsterFactories[randMonsterKind].CreateMonsterUnit();
+            MonsterUnitData spawnMonster = monsterFactories[randMonsterKind].CreateMonsterUnit();
 
             // 랜덤한 위치에서 생성될 수 있도록 스폰포인트 갯수 중 랜덤 숫자 추출
             int randSpawnPoint = Random.Range(0, spawnPoints.Length);
@@ -202,8 +202,11 @@ public class MonsterSpawnManager : MonoBehaviour
     }
     #endregion
 
-    private IEnumerator monsterSpawnProduction(UnitData monster, Vector2 spawnPoint, GameObject Vfx)
+    private IEnumerator monsterSpawnProduction(MonsterUnitData monster, Vector2 spawnPoint, GameObject Vfx)
     {
+        // 유닛 생성 시 초기값 할당하는 함수 호출 , 스테이지 단계 N 당 몬스터 공격력, 체력 N * 10%씩 강화
+        monster.InitValue(value: stageMgrCs.cur_Stage);
+
         // 몬스터 오브젝트 활성화
         monster.gameObject.SetActive(true);
 
@@ -233,9 +236,9 @@ public class MonsterSpawnManager : MonoBehaviour
         // 연출 이후 스택에 Vfx 다시 푸쉬
         m_SpawnVfxs.Push(Vfx);
 
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.25f);
 
-        // 유닛 생성 시 초기값 할당하는 함수 호출 , 스테이지 단계 N 당 몬스터 공격력, 체력 N * 10%씩 강화
-        monster.InitValue(value : stageMgrCs.cur_Stage);
+        monster.OnValue();
+
     }
 }
