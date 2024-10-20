@@ -1,6 +1,6 @@
 ﻿
 // 유닛 동작
-public enum UnitAction
+public enum UnitState
 {
     Default = 0,
     Idle = 1,
@@ -27,7 +27,7 @@ public enum CharacterType
 }
 
 // 유닛 타입
-public enum CharacterNumber
+public enum CharacterID
 {
     Default = 0,
     Tanker = 0,
