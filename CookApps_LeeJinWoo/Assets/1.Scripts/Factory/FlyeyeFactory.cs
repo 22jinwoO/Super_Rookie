@@ -12,7 +12,7 @@ public class FlyeyeFactory : MonoBehaviour, IMonsterFactory
 
     private void Awake()
     {
-        MonsterPrefab.CharacterId = CharacterNumber.FlyEye;
+        MonsterPrefab.CharacterId = CharacterID.FlyEye;
         MonsterPrefab.CharacterType = CharacterType.Monster;
 
         // 스택 초기화

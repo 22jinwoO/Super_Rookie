@@ -15,7 +15,7 @@ public class MushroomFactory : MonoBehaviour, IMonsterFactory
         // 스택 초기화
         Monsters = new Stack<MonsterUnitData>();
 
-        MonsterPrefab.CharacterId = CharacterNumber.Mushoroom;
+        MonsterPrefab.CharacterId = CharacterID.Mushoroom;
         MonsterPrefab.CharacterType = CharacterType.Monster;
 
         // 오브젝트 풀링 셋팅하는 함수

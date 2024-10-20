@@ -12,7 +12,7 @@ public class GoblinFactory : MonoBehaviour, IMonsterFactory
 
     private void Awake()
     {
-        MonsterPrefab.CharacterId = CharacterNumber.Goblin;
+        MonsterPrefab.CharacterId = CharacterID.Goblin;
         MonsterPrefab.CharacterType = CharacterType.Monster;
 
         // 스택 초기화
