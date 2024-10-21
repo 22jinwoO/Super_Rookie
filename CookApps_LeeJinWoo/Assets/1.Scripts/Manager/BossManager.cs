@@ -32,7 +32,7 @@ public class BossManager : MonoBehaviour
         {
             bossUnits[i] = Instantiate(bossUnits[i]);
             bossUnits[i].gameObject.SetActive(false);
-            bossUnits[i].CharacterId = CharacterNumber.Boss_1;
+            bossUnits[i].CharacterId = CharacterID.Boss_1;
             bossUnits[i].CharacterType = CharacterType.BossMonster;
             bossUnits[i].transform.SetParent(transform);
         }
