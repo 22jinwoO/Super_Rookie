@@ -9,9 +9,9 @@ public class MonsterController : MonoBehaviour, IUnitController
     private MonsterUnitData unitData;
 
     [field : SerializeField]
-    public UnitAction Action { get; set; }
+    public UnitState Action { get; set; }
     [field: SerializeField]
-    public IUnitActState UnitState { get; set; }
+    public IUnitActState UnitAct { get; set; }
 
     public Rigidbody2D Rigid { get; set; }
 
@@ -59,7 +59,7 @@ public class MonsterController : MonoBehaviour, IUnitController
 
 
         anim = GetComponentInChildren<Animator>();
-        Action = UnitAction.Idle;
+        Action = UnitState.Idle;
     }
 
     // Update is called once per frame
@@ -75,7 +75,7 @@ public class MonsterController : MonoBehaviour, IUnitController
     }
 
     #region # setActionType(UnitAction state)
-    public void SetState(UnitAction state)
+    public void SetState(UnitState state)
     {
 
         // 현재 상태 저장
@@ -88,59 +88,59 @@ public class MonsterController : MonoBehaviour, IUnitController
         switch (Action)
         {
             // 유닛 대기 상태
-            case UnitAction.Idle:
+            case UnitState.Idle:
 
-                if (UnitState == null)
+                if (UnitAct == null)
                 {
-                    UnitState = monsterIdle;
-                    UnitState.Enter();
+                    UnitAct = monsterIdle;
+                    UnitAct.Enter();
                 }
                 break;
 
              // 몬스터 이동
-            case UnitAction.Move:
+            case UnitState.Move:
 
-                if (UnitState == null && UnitState != monsterMove)
+                if (UnitAct == null && UnitAct != monsterMove)
                 {
-                    UnitState = monsterMove;
-                    UnitState.Enter();
+                    UnitAct = monsterMove;
+                    UnitAct.Enter();
                 }
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 베이스 지점으로 돌아옴
-            case UnitAction.ReturnMove:
+            case UnitState.ReturnMove:
 
-                if (UnitState == null)
+                if (UnitAct == null)
                 {
-                    UnitState = monsterReturnMove;
-                    UnitState.Enter();
+                    UnitAct = monsterReturnMove;
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 유닛 추적 상태
-            case UnitAction.Tracking:
-                if (UnitState == null)
+            case UnitState.Tracking:
+                if (UnitAct == null)
                 {
-                    UnitState = unitTracking;
-                    UnitState.Enter();
+                    UnitAct = unitTracking;
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 유닛 공격 상태
-            case UnitAction.Attack:
-                if (UnitState == null)
+            case UnitState.Attack:
+                if (UnitAct == null)
                 {
-                    UnitState = unitAtk;
+                    UnitAct = unitAtk;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
         }
     }
@@ -158,8 +158,8 @@ public class MonsterController : MonoBehaviour, IUnitController
             //Destroy(c);
             anim.SetBool(hashAttack, false);
             anim.SetBool(hashUseSkill, false);
-            Action = UnitAction.Idle;
-            UnitState = null;
+            Action = UnitState.Idle;
+            UnitAct = null;
         }
     }
     #endregion

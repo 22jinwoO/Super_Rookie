@@ -61,21 +61,21 @@ public class PlayerIdle : MonoBehaviour, IUnitActState
         float distance = Vector2.Distance((Vector2)transform.position, (Vector2)unitData.BasePos.position);
 
         // 플레이어 유닛 상태 비움
-        contorllerCs.UnitState = null;
+        contorllerCs.UnitAct = null;
 
         // 기본 위치와의 거리가 0.3보다 멀 경우 이동 상태로 진입
         if ((distance > 0.3f))
         {
-            contorllerCs.Action = UnitAction.Move;
+            contorllerCs.Action = UnitState.Move;
         }
             
         // 거리가 0.3보다 같거나 작고, 탐지한 적이 없으면 대기상태로 다시 돌입
         else if ((distance <= 0.3f) && searchTargetCs.TargetUnit == null)
-            contorllerCs.Action = UnitAction.Idle;
+            contorllerCs.Action = UnitState.Idle;
 
         // 이외의 경우, 탐지한 타겟이 있다면 추적 상태로 전환
         else if (searchTargetCs.TargetUnit != null)
-            contorllerCs.Action = UnitAction.Tracking;
+            contorllerCs.Action = UnitState.Tracking;
 
     }
 }

@@ -8,13 +8,13 @@ public class BossController : MonoBehaviour, IUnitController
     [SerializeField]
     private BaseUnitData unitData;
 
-    public UnitAction Action { get; set; }
-    public IUnitActState UnitState { get; set; }
+    public UnitState Action { get; set; }
+    public IUnitActState UnitAct { get; set; }
     public Rigidbody2D Rigid { get; set; }
 
     public ISearchTarget searchTargetCs;
 
-    public UnitAction actionState2;
+    public UnitState actionState2;
 
     [Header("유닛 애니메이터")]
     [SerializeField]
@@ -59,7 +59,7 @@ public class BossController : MonoBehaviour, IUnitController
         unitUseSkill = GetComponent<UnitUseSkill>();
 
         anim = GetComponentInChildren<Animator>();
-        Action = UnitAction.Idle;
+        Action = global::UnitState.Idle;
     }
 
     // Update is called once per frame
@@ -76,7 +76,7 @@ public class BossController : MonoBehaviour, IUnitController
     }
 
     #region # SetState(UnitAction state)
-    public void SetState(UnitAction state)
+    public void SetState(UnitState state)
     {
         // 현재 상태 저장
         Action = state;
@@ -88,51 +88,51 @@ public class BossController : MonoBehaviour, IUnitController
         switch (Action)
         {
             // 유닛 대기 상태
-            case UnitAction.Idle:
+            case UnitState.Idle:
 
-                if (UnitState == null)
+                if (UnitAct == null)
                 {
-                    UnitState = monsterIdle;
-                    print(UnitState.ToString());
-                    UnitState.Enter();
+                    UnitAct = monsterIdle;
+                    print(UnitAct.ToString());
+                    UnitAct.Enter();
                 }
 
                 break;
 
             // 유닛 추적 상태
-            case UnitAction.Tracking:
-                if (UnitState == null)
+            case UnitState.Tracking:
+                if (UnitAct == null)
                 {
-                    UnitState = unitTracking;
+                    UnitAct = unitTracking;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 유닛 공격 상태
-            case UnitAction.Attack:
-                if (UnitState == null)
+            case UnitState.Attack:
+                if (UnitAct == null)
                 {
-                    UnitState = unitAtk;
+                    UnitAct = unitAtk;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 유닛 스킬 사용
-            case UnitAction.UseSkill:
-                if (UnitState == null)
+            case UnitState.UseSkill:
+                if (UnitAct == null)
                 {
-                    UnitState = unitUseSkill;
+                    UnitAct = unitUseSkill;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
         }
     }
@@ -147,8 +147,8 @@ public class BossController : MonoBehaviour, IUnitController
 
             anim.SetBool(hashAttack, false);
             anim.SetBool(hashUseSkill, false);
-            Action = UnitAction.Idle;
-            UnitState = null;
+            Action = UnitState.Idle;
+            UnitAct = null;
         }
     }
     #endregion

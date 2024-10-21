@@ -69,8 +69,8 @@ public class PlayerMove : MonoBehaviour, IUnitActState
         if (searchTargetCs.TargetUnit != null)
         {
             anim.SetBool(hashWalk, false);
-            contorllerCs.UnitState = null;
-            contorllerCs.Action = UnitAction.Tracking;
+            contorllerCs.UnitAct = null;
+            contorllerCs.Action = UnitState.Tracking;
 
         }
 
@@ -78,8 +78,8 @@ public class PlayerMove : MonoBehaviour, IUnitActState
         else if (distance <= 0.3f)
         {
             anim.SetBool(hashWalk, false);
-            contorllerCs.UnitState = null;
-            contorllerCs.Action = UnitAction.Idle;
+            contorllerCs.UnitAct = null;
+            contorllerCs.Action = UnitState.Idle;
 
         }
 

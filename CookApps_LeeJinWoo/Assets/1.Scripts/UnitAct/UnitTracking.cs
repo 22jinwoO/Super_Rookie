@@ -110,22 +110,22 @@ public class UnitTracking : MonoBehaviour, IUnitActState
         // 타겟이 스킬 공격 범위 안에 있는 상태일 경우
         if (!gameObject.CompareTag("Monster") && searchTargetCs.TargetUnit != null && unitData.UseSkill)
         {
-            contorllerCs.UnitState = null;
-            contorllerCs.Action = UnitAction.UseSkill;
+            contorllerCs.UnitAct = null;
+            contorllerCs.Action = UnitState.UseSkill;
         }
 
         // 타겟이 공격범위 안에 있는 상태일 경우
         else if (searchTargetCs.TargetUnit != null && unitData.CanAct)
         {
-            contorllerCs.UnitState = null;
-            contorllerCs.Action = UnitAction.Attack;
+            contorllerCs.UnitAct = null;
+            contorllerCs.Action = UnitState.Attack;
         }
 
         // 타겟이 시야 범위 밖으로 나가서 타겟이 null 상태가 됐을 경우
         else if (searchTargetCs.TargetUnit == null)
         {
-            contorllerCs.UnitState = null;
-            contorllerCs.Action = UnitAction.Idle;
+            contorllerCs.UnitAct = null;
+            contorllerCs.Action = UnitState.Idle;
         }
     }
 }

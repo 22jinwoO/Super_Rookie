@@ -71,7 +71,7 @@ public class UnitUseSkill : MonoBehaviour, IUnitActState
     public void Exit()
     {
         contorllerCs.Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-        contorllerCs.UnitState = null;
-        contorllerCs.Action = UnitAction.Tracking;
+        contorllerCs.UnitAct = null;
+        contorllerCs.Action = UnitState.Tracking;
     }
 }

@@ -113,13 +113,13 @@ public class MonsterMove : MonoBehaviour, IUnitActState
 
         float distance = Vector2.Distance((Vector2)transform.position, arrivePoint);
 
-        //contorller.UnitState = null;
+        //contorller.UnitAct = null;
 
         // 타겟을 찾았을 경우
         if (searchTarget.TargetUnit != null)
         {
-            contorller.UnitState = null;
-            contorller.Action = UnitAction.Tracking;
+            contorller.UnitAct = null;
+            contorller.Action = UnitState.Tracking;
             arrivalTime = 0f;
             delayTime = 0f;
         }
@@ -127,8 +127,8 @@ public class MonsterMove : MonoBehaviour, IUnitActState
         // 도착시간이 3초 이상 경과하였고, 목표지점에 도착했을 경우
         if (arrivalTime > 3f && distance <= 0.3f)
         {
-            contorller.UnitState = null;
-            contorller.Action = UnitAction.ReturnMove;
+            contorller.UnitAct = null;
+            contorller.Action = UnitState.ReturnMove;
             arrivalTime = 0f;
 
         }
@@ -136,8 +136,8 @@ public class MonsterMove : MonoBehaviour, IUnitActState
         // 딜레이 시간이 3초보다 커졌을 경우 Exit()함수 호출
         if (delayTime > 13f)
         {
-            contorller.UnitState = null;
-            contorller.Action = UnitAction.Idle;
+            contorller.UnitAct = null;
+            contorller.Action = UnitState.Idle;
             delayTime = 0f;
         }
 

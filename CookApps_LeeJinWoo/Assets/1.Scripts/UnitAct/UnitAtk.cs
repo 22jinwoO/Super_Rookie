@@ -70,9 +70,9 @@ public class UnitAtk : MonoBehaviour, IUnitActState
         contorller.Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         // 추적상태로 전환
-        contorller.UnitState = null;
+        contorller.UnitAct = null;
 
-        contorller.Action = UnitAction.Tracking;
+        contorller.Action = UnitState.Tracking;
     }
 
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitController : MonoBehaviour
 {
-    public UnitAction actionState;
+    public UnitState actionState;
 
     // Concrete클래스들의 접근점(인터페이스)
     public IUnitActState _unitState;

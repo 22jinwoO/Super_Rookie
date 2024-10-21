@@ -49,15 +49,15 @@ public class MonsterIdle : MonoBehaviour, IUnitActState
     public void Exit()
     {
 
-        contorllerCs.UnitState = null;
+        contorllerCs.UnitAct = null;
 
         // 타겟이 없다면 이동상태로 전환
         if (searchTargetCs.TargetUnit == null)
-            contorllerCs.Action = UnitAction.Move;
+            contorllerCs.Action = UnitState.Move;
 
         // 탐지된 타겟이 있다면 추적상태로 돌입
         if (searchTargetCs.TargetUnit != null)
-            contorllerCs.Action = UnitAction.Tracking;
+            contorllerCs.Action = UnitState.Tracking;
 
     }
 

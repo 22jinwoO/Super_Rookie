@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity;
+using System;
 
 public class PlayerController : MonoBehaviour, IUnitController
 {
@@ -8,8 +10,12 @@ public class PlayerController : MonoBehaviour, IUnitController
     [SerializeField]
     private PlayerUnitData unitData;
 
-    public UnitAction Action { get; set; }
-    public IUnitActState UnitState { get; set; }
+    // 유닛의 현재 상태
+    public UnitState Action { get; set; }
+
+    // 유닛의 현재 행동
+    public IUnitActState UnitAct { get; set; }
+
     public Rigidbody2D Rigid { get; set; }
 
     public ISearchTarget searchTarget;
@@ -45,20 +51,10 @@ public class PlayerController : MonoBehaviour, IUnitController
 
     private void Awake()
     {
-        unitData = GetComponent<PlayerUnitData>();
-        searchTarget = GetComponent<ISearchTarget>();
-        Rigid = GetComponent<Rigidbody2D>();
-
-        playerIdle = GetComponent<PlayerIdle>();
-        playerMove = GetComponent<PlayerMove>();
-        unitTracking = GetComponent<UnitTracking>();
-        unitAtk = GetComponent<UnitAtk>();
-        unitUseSkill = GetComponent<UnitUseSkill>();
-
-        anim = GetComponentInChildren<Animator>();
+        InitComponent();
 
         // 대기상태로 시작하도록 지정
-        Action = UnitAction.Idle;
+        Action = UnitState.Idle;
     }
 
     void Update()
@@ -78,8 +74,8 @@ public class PlayerController : MonoBehaviour, IUnitController
             //anim.SetTrigger(hashIdle);
 
             searchTarget.TargetUnit = null;
-            UnitState = null;
-            Action = UnitAction.UseSkill;
+            UnitAct = null;
+            Action = global::UnitState.UseSkill;
 
             SetState(Action);
         }
@@ -88,9 +84,24 @@ public class PlayerController : MonoBehaviour, IUnitController
         else if (unitData.CanAct)
             SetState(Action);
     }
+    private void InitComponent()
+    {
+        unitData = GetComponent<PlayerUnitData>();
+        searchTarget = GetComponent<ISearchTarget>();
+        Rigid = GetComponent<Rigidbody2D>();
+
+        playerIdle = GetComponent<PlayerIdle>();
+        playerMove = GetComponent<PlayerMove>();
+        unitTracking = GetComponent<UnitTracking>();
+        unitAtk = GetComponent<UnitAtk>();
+        unitUseSkill = GetComponent<UnitUseSkill>();
+
+        anim = GetComponentInChildren<Animator>();
+
+    }
 
     #region # SetState(UnitAction state)
-    public void SetState(UnitAction state)
+    public void SetState(UnitState state)
     {
         // 현재 상태 저장
         Action = state;
@@ -102,66 +113,66 @@ public class PlayerController : MonoBehaviour, IUnitController
         switch (Action)
         {
             // 유닛 대기 상태
-            case UnitAction.Idle:
+            case UnitState.Idle:
                 
-                if (UnitState == null && UnitState != playerIdle)
+                if (UnitAct == null && UnitAct != playerIdle)
                 {
-                    UnitState = playerIdle;
+                    UnitAct = playerIdle;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
-                if (UnitState != null)
-                    UnitState.DoAction();
+                if (UnitAct != null)
+                    UnitAct.DoAction();
 
                 break;
 
             // 유닛 이동 상태
-            case UnitAction.Move:
+            case UnitState.Move:
 
-                if (UnitState == null)
+                if (UnitAct == null)
                 {
-                    UnitState = playerMove;
+                    UnitAct = playerMove;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 유닛 추적 상태
-            case UnitAction.Tracking:
-                if (UnitState == null)
+            case UnitState.Tracking:
+                if (UnitAct == null)
                 {
-                    UnitState = unitTracking;
+                    UnitAct = unitTracking;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 유닛 공격 상태
-            case UnitAction.Attack:
-                if (UnitState == null)
+            case UnitState.Attack:
+                if (UnitAct == null)
                 {
-                    UnitState = unitAtk;
+                    UnitAct = unitAtk;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
 
             // 유닛 스킬 사용
-            case UnitAction.UseSkill:
-                if (UnitState == null)
+            case UnitState.UseSkill:
+                if (UnitAct == null)
                 {
-                    UnitState = unitUseSkill;
+                    UnitAct = unitUseSkill;
 
-                    UnitState.Enter();
+                    UnitAct.Enter();
                 }
 
-                UnitState.DoAction();
+                UnitAct.DoAction();
                 break;
         }
     }
@@ -176,8 +187,8 @@ public class PlayerController : MonoBehaviour, IUnitController
 
             anim.SetBool(hashAttack, false);
             anim.SetBool(hashUseSkill, false);
-            Action = UnitAction.Idle;
-            UnitState = null;
+            Action = global::UnitState.Idle;
+            UnitAct = null;
         }
     }
     #endregion

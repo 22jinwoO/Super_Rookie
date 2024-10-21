@@ -117,23 +117,23 @@ public class MonsterReturnMove : MonoBehaviour, IUnitActState
 
         if (searchTarget.TargetUnit != null)
         {
-            contorller.UnitState = null;
-            contorller.Action = UnitAction.Tracking;
+            contorller.UnitAct = null;
+            contorller.Action = UnitState.Tracking;
             delayTime = 0f;
             arrivalTime = 0f;
         }
 
         if (arrivalTime > 3f && distance <= 0.3f)
         {
-            contorller.UnitState = null;
-            contorller.Action = UnitAction.Idle;
+            contorller.UnitAct = null;
+            contorller.Action = UnitState.Idle;
             arrivalTime = 0f;
         }
 
         if (delayTime > 13f)
         {
-            contorller.UnitState = null;
-            contorller.Action = UnitAction.Idle;
+            contorller.UnitAct = null;
+            contorller.Action = UnitState.Idle;
             delayTime = 0f;
         }
 

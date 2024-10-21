@@ -26,8 +26,8 @@ public class UnitIdle : MonoBehaviour, IUnitActState
 
     public void Exit()
     {
-        contorllerCs.UnitState = null;
-        contorllerCs.Action = UnitAction.Tracking;
+        contorllerCs.UnitAct = null;
+        contorllerCs.Action = UnitState.Tracking;
     }
 
 }
