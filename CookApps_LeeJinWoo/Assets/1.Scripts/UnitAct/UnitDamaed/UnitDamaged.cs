@@ -160,7 +160,7 @@ public class UnitDamaged : MonoBehaviour
         if (unitData.CharacterType.Equals(CharacterType.Monster))
         {
             // 보스 생성되기 전 호출되는 이벤트 해제
-            StageManager.Instance.OnDeadAllPlayer -= unitData.UnitDead;
+            StageManager.Instance.OnDeadAllMonster -= unitData.UnitDead;
 
             // 몬스터를 공격한 플레이어 유닛이 있을 경우
             // => 보스 스테이지 시작 전 이벤트가 호출되었을 때, 플레이어 유닛이 처치한 몬스터가 아니여도, 스테이지 몬스터 처치 수가 증가되는 것을 방지하기 위함
@@ -193,7 +193,7 @@ public class UnitDamaged : MonoBehaviour
             if (_unit_attacked_Me != null)
             {
                 // 보스 생성되기 전 호출되는 이벤트 해제
-                StageManager.Instance.OnDeadAllPlayer -= unitData.UnitDead;
+                StageManager.Instance.OnDeadAllMonster -= unitData.UnitDead;
 
                 MonsterUnitData monsterData = unitData as MonsterUnitData;
 
