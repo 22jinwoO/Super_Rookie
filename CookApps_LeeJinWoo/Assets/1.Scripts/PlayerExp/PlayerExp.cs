@@ -44,7 +44,7 @@ public class PlayerExp : MonoBehaviour
         max_ExpValue = 60f;
     }
 
-    #region # CalculateExpValue() : 몬스터 처치 시 경험치를 부여해주고 레벨업을
+    #region # CalculateExpValue() : 몬스터 처치 시 경험치를 부여해주고 레벨업 가능한지 체크하는 프로퍼티
     public float CalculateExpValue
     {
         set
