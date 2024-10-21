@@ -144,40 +144,9 @@ public class MonsterSpawnManager : MonoBehaviour
             // 랜덤한 위치에서 생성될 수 있도록 스폰포인트 갯수 중 랜덤 숫자 추출
             int randSpawnPoint = Random.Range(0, spawnPoints.Length);
 
-            // 지역변수 선언
-            Vector2 spawnPoint = Vector2.zero;
+            // 랜덤한 스폰 위치를 결정하는 함수
+            Vector2 spawnPoint = GetRandomSpawnPoint(spawnPoints[randSpawnPoint]);
 
-
-
-            // 좌표값의 마이너스 값인 부분 랜덤한 값으로 할당
-            float minusValue = Random.Range(-4f, -2f);
-
-            // 좌표값의 플러스 값인 부분 랜덤한 값으로 할당
-            float plusValue = Random.Range(2f, 4f);
-
-            switch (randSpawnPoint)
-            {
-                // 1 사분면
-                case 0:
-                    spawnPoint = (Vector2)spawnPoints[randSpawnPoint].position + new Vector2(minusValue, plusValue);
-                    break;
-
-                // 2 사분면
-                case 1:
-                    spawnPoint = (Vector2)spawnPoints[randSpawnPoint].position + new Vector2(plusValue, plusValue);
-                    break;
-
-                // 3 사분면
-                case 2:
-                    spawnPoint = (Vector2)spawnPoints[randSpawnPoint].position + new Vector2(minusValue, minusValue);
-                    break;
-
-                // 4 사분면
-                case 3:
-                    spawnPoint = (Vector2)spawnPoints[randSpawnPoint].position + new Vector2(plusValue, minusValue);
-                    break;
-
-            }
 
             // 오브젝트 풀링에서 vfx 추출
             GameObject vfxPrefab = Active_Vfx(spawnPoint);
@@ -197,10 +166,42 @@ public class MonsterSpawnManager : MonoBehaviour
 
         // 몬스터 생성주기 0으로 초기화
         cur_creation_cycle = 0f;
-
-
     }
     #endregion
+
+    private Vector2 GetRandomSpawnPoint(Transform spawnPoint)
+    {
+
+        int randValue = Random.Range(0, 4);
+
+        // 좌표값의 마이너스 값인 부분 랜덤한 값으로 할당
+        float minusValue = Random.Range(-4f, -2f);
+
+        // 좌표값의 플러스 값인 부분 랜덤한 값으로 할당
+        float plusValue = Random.Range(2f, 4f);
+
+        switch (randValue)
+        {
+            // 1 사분면
+            case 0:
+                return (Vector2)spawnPoint.position + new Vector2(minusValue, plusValue);
+
+            // 2 사분면
+            case 1:
+                return (Vector2)spawnPoint.position + new Vector2(plusValue, plusValue);
+
+            // 3 사분면
+            case 2:
+                return (Vector2)spawnPoint.position + new Vector2(minusValue, minusValue);
+
+            // 4 사분면
+            case 3:
+                return (Vector2)spawnPoint.position + new Vector2(plusValue, minusValue);
+
+            default: return (Vector2)spawnPoint.position;
+        }
+
+    }
 
     private IEnumerator monsterSpawnProduction(MonsterUnitData monster, Vector2 spawnPoint, GameObject Vfx)
     {
