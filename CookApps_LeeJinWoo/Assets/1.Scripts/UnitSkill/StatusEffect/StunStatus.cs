@@ -7,10 +7,14 @@ public class StunStatus : MonoBehaviour, IStatusEffect
     [Header("타겟 유닛 데이터")]
     public BaseUnitData targetUnitData;
 
+    [Header("현재 상태이상이 적용된 시간")]
     [SerializeField]
-    private float duringTime;    
-    
+    private float duringTime;
+
+    // "상태이상효과 적용 시간"
     public float _statusEffecttime { get; set; }
+
+    // 스킬 이펙트
     public GameObject _skillVfx { get; set; }
 
     [Header("유닛 애니메이터")]
@@ -69,8 +73,8 @@ public class StunStatus : MonoBehaviour, IStatusEffect
         anim.SetBool(hashAttack, false);
         anim.SetBool(hashUseSkill, false);
 
-        controllerCs.UnitState = null;
-        controllerCs.Action = UnitAction.Idle;
+        controllerCs.UnitAct = null;
+        controllerCs.Action = UnitState.Idle;
     }
 
     private void OnDestroy()

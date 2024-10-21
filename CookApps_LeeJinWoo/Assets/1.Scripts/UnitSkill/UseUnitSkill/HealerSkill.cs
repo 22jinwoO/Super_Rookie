@@ -16,11 +16,11 @@ public class HealerSkill : MonoBehaviour, IUseSkill
     [SerializeField]
     private GameObject skillvfx_Pref;
 
-    // IUseSkill 인터페이스의 이펙트 오브젝트
+    // 스킬 이펙트
     public GameObject _skillVFx { get; set; }
 
 
-    // IUseSkill 인터페이스의 이펙트 오브젝트
+    // 힐러 대상
     public Transform targetTr;
 
 

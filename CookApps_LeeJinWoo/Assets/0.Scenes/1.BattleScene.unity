@@ -907,7 +907,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uADFC\uAC70\uB9AC \uB51C\uB7EC"
+  m_text: "\uB3C4\uC801"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3091da13eec018e48ba92bef63b47d0b, type: 2}
   m_sharedMaterial: {fileID: 4841154901092954695, guid: 3091da13eec018e48ba92bef63b47d0b, type: 2}
@@ -3587,7 +3587,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitData: {fileID: 0}
-  actionState2: 0
   anim: {fileID: 0}
 --- !u!114 &403363226
 MonoBehaviour:
@@ -3769,6 +3768,7 @@ MonoBehaviour:
   <Max_Hp>k__BackingField: 0
   <Unit_Hp>k__BackingField: 0
   <UnitSpeed>k__BackingField: 0
+  <DefaultAtkDmg>k__BackingField: 0
   <AtkDmg>k__BackingField: 0
   <AtkRange>k__BackingField: 0
   <UnitAtkCoolTime>k__BackingField: 0
@@ -5172,7 +5172,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitData: {fileID: 0}
-  actionState2: 0
   anim: {fileID: 0}
 --- !u!114 &576010536
 MonoBehaviour:
@@ -5302,6 +5301,7 @@ MonoBehaviour:
   <Max_Hp>k__BackingField: 0
   <Unit_Hp>k__BackingField: 0
   <UnitSpeed>k__BackingField: 0
+  <DefaultAtkDmg>k__BackingField: 0
   <AtkDmg>k__BackingField: 0
   <AtkRange>k__BackingField: 0
   <UnitAtkCoolTime>k__BackingField: 0
@@ -5882,7 +5882,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitData: {fileID: 0}
-  actionState2: 0
   anim: {fileID: 0}
 --- !u!114 &666401473
 MonoBehaviour:
@@ -6028,6 +6027,7 @@ MonoBehaviour:
   <Max_Hp>k__BackingField: 0
   <Unit_Hp>k__BackingField: 0
   <UnitSpeed>k__BackingField: 0
+  <DefaultAtkDmg>k__BackingField: 0
   <AtkDmg>k__BackingField: 0
   <AtkRange>k__BackingField: 0
   <UnitAtkCoolTime>k__BackingField: 0
@@ -7447,7 +7447,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC6D0\uAC70\uB9AC \uB51C\uB7EC"
+  m_text: "\uAD81\uC218"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3091da13eec018e48ba92bef63b47d0b, type: 2}
   m_sharedMaterial: {fileID: 4841154901092954695, guid: 3091da13eec018e48ba92bef63b47d0b, type: 2}
@@ -35178,7 +35178,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitData: {fileID: 0}
-  actionState2: 0
   anim: {fileID: 0}
 --- !u!114 &1991556396
 MonoBehaviour:
@@ -35306,6 +35305,7 @@ MonoBehaviour:
   <Max_Hp>k__BackingField: 0
   <Unit_Hp>k__BackingField: 0
   <UnitSpeed>k__BackingField: 0
+  <DefaultAtkDmg>k__BackingField: 0
   <AtkDmg>k__BackingField: 0
   <AtkRange>k__BackingField: 0
   <UnitAtkCoolTime>k__BackingField: 0
