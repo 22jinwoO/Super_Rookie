@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IBaseUnitData
 {
-    public CharacterNumber CharacterId { get; set; }
+    public CharacterID CharacterId { get; set; }
     public CharacterType CharacterType { get; set; }
     public float Max_Hp { get; set; }
     public float Unit_Hp { get; set; }
@@ -34,7 +34,7 @@ public interface IBaseUnitData
     public void CheckAttackCoolTime();
     public void CheckSkillCoolTime();
     public void InitComponent();
-    public void InitStats(CharacterNumber characterId = CharacterNumber.Default);
+    public void InitStats(CharacterID characterId = CharacterID.Default);
     public void InitValue(float value = 1);
     public void OffValue();
     public void UnitDead();
