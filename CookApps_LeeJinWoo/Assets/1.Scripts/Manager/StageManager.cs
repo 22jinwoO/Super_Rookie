@@ -26,10 +26,10 @@ public class StageManager : Singleton<StageManager>
     private Tilemap mapTile;
 
     //델리게이트 선언
-    public delegate void playerAllDead();
+    public delegate void monsterAllDead();
 
     //이벤트 선언
-    public event playerAllDead OnDeadAllPlayer;
+    public event monsterAllDead OnDeadAllMonster;
 
     [Header("보스 스테이지 유무")]
     public bool isBossStage;
@@ -92,7 +92,7 @@ public class StageManager : Singleton<StageManager>
         yield return new WaitForSecondsRealtime(1.5f);
 
         // 생성되어 있던 유닛들 모두 사망하게 하는 이벤트 호출
-        OnDeadAllPlayer();
+        OnDeadAllMonster();
 
         // 현재 죽은 몬스터 수 0
         deathMonsterCnt = 0;
