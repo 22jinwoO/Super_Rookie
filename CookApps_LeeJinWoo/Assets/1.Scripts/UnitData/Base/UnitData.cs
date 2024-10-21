@@ -211,8 +211,8 @@ public class UnitData : MonoBehaviour
 
         anim.SetBool(hashAttack, false);
         anim.SetBool(hashUseSkill, false);
-        controllerCs.Action = UnitAction.Idle;
-        controllerCs.UnitState = null;
+        controllerCs.Action = UnitState.Idle;
+        controllerCs.UnitAct = null;
 
         _canAct = false;
     }
@@ -261,14 +261,14 @@ public class UnitData : MonoBehaviour
         anim.SetBool(hashUseSkill, false);
 
         // 컨트롤러 동작 상태 Idle로 변경
-        controllerCs.Action = UnitAction.Idle;
+        controllerCs.Action = UnitState.Idle;
 
         // 유닛의 동작 시 기준이 되는 스크립트 null로 변경
-        controllerCs.UnitState = null;
+        controllerCs.UnitAct = null;
 
         // 이 유닛이 몬스터라면 StageManager의 이벤트 연결
         if(gameObject.CompareTag("Monster"))
-            StageManager.Instance.OnDeadAllPlayer += UnitDead;
+            StageManager.Instance.OnDeadAllMonster += UnitDead;
 
         // 유닛 행동 가능하도록 변경
         _canAct = true;
