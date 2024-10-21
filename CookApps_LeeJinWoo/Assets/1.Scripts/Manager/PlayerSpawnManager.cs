@@ -33,11 +33,11 @@ public class PlayerSpawnManager : MonoBehaviour
     [SerializeField]
     private Transform[] spawnPoints;
 
-    private void Awake()
+    private void Start()
     {
         for(int i = 0; i < playerUnits.Length; i++)
         {
-            playerUnits[i].CharacterId = CharacterNumber.Tanker + i;
+            playerUnits[i].CharacterId = CharacterID.Tanker + i;
             playerUnits[i].CharacterType = CharacterType.Tanker + i;
 
             playerUnits[i].BasePos = spawnPoints[i];
