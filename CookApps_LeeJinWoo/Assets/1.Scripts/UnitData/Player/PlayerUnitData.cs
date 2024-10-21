@@ -26,7 +26,7 @@ public class PlayerUnitData : BaseUnitData
     public float Plus_HpStat { get; set; }
 
     #region # InitStats() : 유닛의 기본 데이터 값 할당해주는 함수
-    public override void InitStats(CharacterNumber characterId = CharacterNumber.Default)
+    public override void InitStats(CharacterID characterId = CharacterID.Default)
     {
         // 유닛의 최대 체력
         Max_Hp = float.Parse(data_Dialog[(int)characterId]["MaxHp"].ToString());
@@ -52,13 +52,18 @@ public class PlayerUnitData : BaseUnitData
         // 유닛의 적 탐지 사거리
         UnitSightRange = float.Parse(data_Dialog[(int)characterId]["Sight_Range"].ToString());
 
-        // 유닛의 현재 체력 = 유닛의 최대 체력
+        // 유닛의 최대 체력 = 현재 최대 체력 + 레벨 상승으로 인한 추가 체력 + 재화 소모로 증가된 추가 체력
         Max_Hp = Max_Hp + Level_Plus_HpStat + Plus_HpStat;
-        Unit_Hp = Max_Hp;
-        AtkDmg = DefaultAtkDmg + Level_Plus_AtkStat + Plus_AtkStat;
-    }
-#endregion
 
+        // 유닛의 현재 공격력 = 기본 공격력 + 레벨 상승으로 인한 추가 공격력 + 재화 소모로 증가된 추가 공격력
+        AtkDmg = DefaultAtkDmg + Level_Plus_AtkStat + Plus_AtkStat;
+
+        // 유닛의 현재 체력 = 유닛의 최대 체력
+        Unit_Hp = Max_Hp;
+    }
+    #endregion
+
+    #region # PlusPlayerStat() : 재화를 소모하여 유닛의 스탯을 상승시킬 때 호출되는 함수
     public void PlusPlayerStat(PlusStats stat, float plusValue)
     {
         // 스탯 증가 로직
@@ -75,6 +80,7 @@ public class PlayerUnitData : BaseUnitData
                 break;
         }
     }
+    #endregion
 
 }
 
