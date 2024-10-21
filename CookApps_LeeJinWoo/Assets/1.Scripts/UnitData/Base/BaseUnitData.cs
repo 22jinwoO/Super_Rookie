@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseUnitData : MonoBehaviour, IBaseUnitData
 {
     [field: SerializeField]
-    public CharacterNumber CharacterId { get; set; }
+    public CharacterID CharacterId { get; set; }
 
     [field: SerializeField]
     public CharacterType CharacterType { get; set; }
@@ -85,6 +85,7 @@ public class BaseUnitData : MonoBehaviour, IBaseUnitData
         CheckSkillCoolTime();
     }
 
+    #region # InitComponent() : 변수에 컴포넌트 값들 캐싱해주는 함수
     public void InitComponent()
     {
         CapsuleCollider = GetComponent<CapsuleCollider2D>();
@@ -94,7 +95,10 @@ public class BaseUnitData : MonoBehaviour, IBaseUnitData
         UnitDamaged = GetComponent<UnitDamaged>();
         Anim = GetComponentInChildren<Animator>();
     }
+    #endregion
 
+
+    #region # CheckAttackCoolTime() : 기본 공격 쿨타임을 체크해주는 함수
     public void CheckAttackCoolTime()
     {
         // 기본 공격이 가능한지 확인
@@ -103,6 +107,10 @@ public class BaseUnitData : MonoBehaviour, IBaseUnitData
         //현재 기본 공격 쿨타임이 유닛의 기본 공격속도 보다 낮다면 쿨타임 돌려주기
         if (!CanAtk) Current_AtkCoolTime += Time.deltaTime;
     }
+    #endregion
+
+
+    #region # CheckSkillCoolTime() : 스킬 공격 쿨타임을 체크해주는 함수
 
     public void CheckSkillCoolTime()
     {
@@ -112,41 +120,48 @@ public class BaseUnitData : MonoBehaviour, IBaseUnitData
         //현재 스킬 공격 쿨타임이 유닛의 스킬 공격 쿨타임 보다 낮다면 쿨타임 돌려주기
         if (!UseSkill) Current_SkillCoolTime += Time.deltaTime;
     }
+    #endregion
 
-    #region # InitStats() : 유닛의 기본 데이터 값 할당해주는 함수
-    public virtual void InitStats(CharacterNumber characterId = CharacterNumber.Default)
+
+
+    #region # InitStats() : CSV파일에서 유닛 ID에 해당하는 스탯의 디폴트 값들을 찾아서 데이터를 할당하는 함수
+    public virtual void InitStats(CharacterID characterId = CharacterID.Default)
     {
+        // 캐릭터 ID 열거형 => int 형으로 형변환
+        int characterID = (int)characterId;
+
         // 유닛의 최대 체력
-        Max_Hp = float.Parse(data_Dialog[(int)characterId]["MaxHp"].ToString());
+        Max_Hp = float.Parse(data_Dialog[characterID]["MaxHp"].ToString());
 
         // 유닛의 이동속도
-        UnitSpeed = float.Parse(data_Dialog[(int)characterId]["UnitSpeed"].ToString());
+        UnitSpeed = float.Parse(data_Dialog[characterID]["UnitSpeed"].ToString());
 
         // 유닛의 공격력
-        AtkDmg = float.Parse(data_Dialog[(int)characterId]["Atk_Dmg"].ToString());
+        AtkDmg = float.Parse(data_Dialog[characterID]["Atk_Dmg"].ToString());
 
         // 유닛의 기본 공격 사거리
-        AtkRange = float.Parse(data_Dialog[(int)characterId]["Atk_Range"].ToString());
+        AtkRange = float.Parse(data_Dialog[characterID]["Atk_Range"].ToString());
 
         // 유닛의 기본 공격 쿨타임
-        UnitAtkCoolTime = float.Parse(data_Dialog[(int)characterId]["Atk_CoolTime"].ToString());
+        UnitAtkCoolTime = float.Parse(data_Dialog[characterID]["Atk_CoolTime"].ToString());
 
         // 유닛의 스킬 공격 사거리
-        UnitSkillRange = int.Parse(data_Dialog[(int)characterId]["Skill_Range"].ToString());
+        UnitSkillRange = int.Parse(data_Dialog[characterID]["Skill_Range"].ToString());
 
         // 유닛의 스킬 공격 쿨타임
-        UnitSkillCoolTime = float.Parse(data_Dialog[(int)characterId]["Skill_CoolTime"].ToString());
+        UnitSkillCoolTime = float.Parse(data_Dialog[characterID]["Skill_CoolTime"].ToString());
 
         // 유닛의 적 탐지 사거리
-        UnitSightRange = float.Parse(data_Dialog[(int)characterId]["Sight_Range"].ToString());
+        UnitSightRange = float.Parse(data_Dialog[characterID]["Sight_Range"].ToString());
 
-        // 유닛의 현재 체력 = 유닛의 최대 체력
-        Unit_Hp = Max_Hp;
+
     }
     #endregion
 
+    #region # InitValue() : 유닛 생성 전 데이터 부여 및 일부 기능 비활성화 해주는 함수 호출
     public void InitValue(float value = 1)
     {
+        // CSV파일에서 유닛 ID에 해당하는 스탯의 디폴트 값들을 찾아서 데이터를 할당하는 함수 호출
         InitStats(characterId: CharacterId);
 
         // 오브젝트 타입이 몬스터 일 경우 - 스테이지 단계 N 당 몬스터 공격력, 체력 N * 10%씩 강화
@@ -163,13 +178,17 @@ public class BaseUnitData : MonoBehaviour, IBaseUnitData
             AtkDmg *= (1 + value * 0.4f);
         }
 
-        OffValue();
-    }
-
-    public void OnValue()
-    {
+        // 유닛의 현재 체력 = 유닛의 최대 체력
         Unit_Hp = Max_Hp;
 
+        // 유닛의 컴포넌트 및 일부 기능 비활성화
+        OffValue();
+    }
+    #endregion
+
+    #region # OnValue() : 유닛 생성 후 필요한 컴포넌트 및 기능들을 활성화해주는 함수
+    public void OnValue()
+    {
         // 타겟 없음으로 변경
         SearchTarget.TargetUnit = null;
 
@@ -193,40 +212,52 @@ public class BaseUnitData : MonoBehaviour, IBaseUnitData
         Anim.SetBool(hashUseSkill, false);
 
         // 컨트롤러 동작 상태 Idle로 변경
-        Controller.Action = UnitAction.Idle;
+        Controller.Action = UnitState.Idle;
 
         // 유닛의 동작 시 기준이 되는 스크립트 null로 변경
-        Controller.UnitState = null;
+        Controller.UnitAct = null;
 
         // 이 유닛이 몬스터라면 StageManager의 이벤트 연결
-        if (gameObject.CompareTag("Monster")) StageManager.Instance.OnDeadAllPlayer += UnitDead;
+        if (gameObject.CompareTag("Monster")) StageManager.Instance.OnDeadAllMonster += UnitDead;
 
         // 유닛 행동 가능하도록 변경
         CanAct = true;
 
     }
+    #endregion
 
+    #region # OffValue() : 유닛 생성 전 데이터 부여 및 일부 기능 비활성화 해주는 함수 호출
     public void OffValue()
     {
-        Controller.Action = UnitAction.Idle;
 
+        Controller.Action = UnitState.Idle;
+
+        //애니메이션 비활성화
         Anim.SetBool("isWalk", false);
 
         Anim.SetBool(hashAttack, false);
 
         Anim.SetBool(hashUseSkill, false);
 
+        // Rigidbody 움직임 멈춤
         Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 
+        // 타겟 변수 null로 변경
         SearchTarget.TargetUnit = null;
 
+        // 캡슐 콜라이더 비활성화
         CapsuleCollider.enabled = false;
 
-        Controller.UnitState = null;
+        // 유닛의 동작 시 기준이 되는 스크립트 null로 변경
+        Controller.UnitAct = null;
 
+        // 유닛 행동 불능 상태로 변경
         CanAct = false;
     }
+    #endregion
 
+
+    #region # UnitDead() : 유닛의 Hp가 0이하가 되어 죽었을 때 호출되는 함수
     public void UnitDead()
     {
         CapsuleCollider.enabled = false;
@@ -235,4 +266,6 @@ public class BaseUnitData : MonoBehaviour, IBaseUnitData
 
         UnitDamaged.DeadCheck();
     }
+    #endregion
+
 }
