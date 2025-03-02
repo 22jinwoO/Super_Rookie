@@ -8,7 +8,7 @@
 4가지 직업으로 구성된 플레이어 유닛들이 자동 전투를 진행하며 레벨업 및 스탯 상승을 통해 성장하는 Idle RPG 게임
 
 # 🎥 영상 포트폴리오
-[![Video Label](http://img.youtube.com/vi/cGtzbi-Eqjg/0.jpg)](https://www.youtube.com/watch?v=cGtzbi-Eqjg)
+[![Video Label](슈퍼루키2.jpg)](https://www.youtube.com/watch?v=cGtzbi-Eqjg)
 - 이미지 클릭
 
 ---
